@@ -1,0 +1,58 @@
+\documentclass{article}
+\usepackage{graphicx}
+\usepackage{listings}
+
+\graphicspath{ {./} }
+
+\begin{document}
+
+\title{Nummernmerker}
+\author{Tassilo Tanneberger}
+
+\maketitle
+
+\section{Ideen der Algorithmen}
+Ist eine sammlung an prinziplen Ideen die ich mir gemacht hatte befor ich angefangen hatt zu Implementieren.
+\subsection{Dreier Blöcke}
+
+Ich habe mich dafür entschieden als erstes die Zahl in dreier Blöcke zu spalten das hatte den ganz einfachen Grund das man somit Flexibeler später ist wenn man Zahlen umherschiebt weil man ohne Probleme dann z.B eine Zahl von dem Vorherigen Block abtrennen kann und an seinen anfügen ohne das man die grenzen von \( 2 \leq x \leq 4  \) überschreitet.
+
+\subsection{Anfügen}
+
+Wird dann durch geführt wenn die Letze Zahl des dafor liegenden Blockes keine 0 ist. Dabei wird die letzte Zahl  nun abgetrennt und an den Aktuellen Block angefügt. \newline
+
+before = "123","012" 
+
+after = "12", "3012"
+
+\subsection{Abfügen}
+
+Wird dann durch geführt wenn sowohl die letzte Zahl des daforigen Gieledes eine 0 ist. Dabei wird nun die erste Zahl aus dem aktuellen Glieb abgetrennt und an das letzte des vorrigen angefügt. \newline
+
+before = "120", "012"
+
+after = "1200", "12"
+
+\section{Implementierung}
+
+Das Programm wurde in Go Implementiert Go ist dafür das es noch Compiled werden muss und relativ low level ist noch eine sehr angenehme Sprache somit Ideal für solche klein Projekte geingnet.
+
+\subsection{Transform Blocks}
+
+Diese Funktion ist der Kern des Programmes. Das Programm Interiert durch die Blöcke und schaut ob das erste Zeichen ist eine "0" ist. Ist das der Fall wird geschaut ob das letzte Zeichen des daforigen Blockes als letzen Charakater eine "0" ist das der Fall wird Abfügen durchgeführt wenn es nicht der Fall ist Anfügen.
+
+
+\subsection{Finishing up}
+
+
+\subsection{Benchmarking}
+
+Ich hatte ein paar Versuche mit Zufällig Generierten Zahlen gemacht das Sind die resultate:
+
+"Anfügen" aktiv: 82 \%
+
+"Anfügen" und "Abfügen" aktiv:  98 \%
+
+aller Anfangs 0. Können beseitigt werden.
+
+\end{document}
