@@ -1,0 +1,77 @@
+\documentclass{article}
+\usepackage{graphicx}
+\usepackage{listings}
+
+%\graphicspath{ {../resources/} }
+
+\begin{document}
+
+\title{Telepaartie}
+\author{Tassilo Tanneberger}
+
+\maketitle
+
+\section{Ideen des Algorithmus}
+
+\subsection*{ Finden der LLL}
+
+Eine LLL kann nur entstehen wenn dafor zwei Spalten die gleiche anzahl Objekte beinhalten(a,b,c \dots Spalten) \( a = b\) Somit würde auch gleich einen Schritt zufor gelten z.B 
+\begin{equation}
+	(2a = b \wedge a < c)  \oplus (2b = a \wedge b < c)
+\end{equation}
+
+Mit diesem Wissen können wir Mögliche LLLs zwei Schichten vorraus sagen. Zudem möchte ich noch kurz darauf aufmerksam machen das \(a>c\) oder \(b > c\) bei  \( \leq \) würde Regel 1.) greifen. Diese Aufgestellten beobachtungen helfen uns nun die Zu untersuchenden Möglichkeite um zwei Schichten immer zu reduzieren.
+
+\subsection*{ Darstellung als Baum}
+
+Die einzig wirklich Sinnvolle Datenstrukturelle darstellung ist als Baum. Der folgende Eigenschaften besitzt.
+\newline
+
+\(max_c\)\dots 				Maximale Anzahl Kinder und Kanten die ein Knoten hatt. \newline
+\(collumns\)\dots 			Anzahl Spalten ( Boxen ) \newline
+\(max_k\)\dots				Maximale anzahl an Knoten.  \newline
+\(N\)\dots    					Anzahl der Schichten bis LLL gefunden wird
+
+\begin{equation}
+	max_c = collumns ^ 2 - collumns
+\end{equation}
+
+Das sind natürlich nur worst case betrachtungen und mit intelligentem z.B Ausschließen von Doppelten lässt sich die gesamt anzahl Knoten stark minimieren. Somit ergibt sich für Anzahl der Knoten im gesamten Baum die Funktion: \newline
+
+\begin{equation}
+	max_k =  \sum \limits_{i=1}^N  (max_c ^ i)
+\end{equation}
+
+Wie schon im ersten Abschnitt angesprochen können wir das N um zwei Reduzieren weil wir schon nach den Kanten suchen die diese Eigenschaften erfüllen und somit auf Garantie zur LLL führen.
+
+\subsection*{ Suchen }
+
+Auch wenn die Datenstruktur "Baum" immer sehr einladend ist rekursiv zu Arbeiten (Suchen) ist sie für unseren fall hier äußerst ungeignet da wir damit sehr viele ungenutzte Knoten erzeugen was sehr unperformant ist. Weswegen wir alle Kinder aller Knoten einer Schicht erzeugen lassen und diese dann dann abprüfen ob sie die Kriterien in 1.) erfüllen. Damit erhältman ein bessere Average performance.
+
+
+\section{ Implementierung }
+
+Das Programm wurde mit C++ (C11) Implementiert das ist hatt den Vorteil das ich meine Knoten als Objekte und den Parent und die Childs einfach als Pointer Speichern kann. Zudem habe ich den Großen Performance Vorteil als Complalierte Sprache den ich definitiv brauche.
+
+\subsection*{ Zum Laufen Kriegen }
+
+Ich würde sehr dringend raten den gcc (g++) \(\rightarrow\) die GNU Build Essentials zu nutzen. Weil ich nicht dafür Guarntieren kann das es z.B mit VSCODE oder clang-tidy geht.
+
+\begin{lstlisting}[language=Bash]
+	
+	$ mkdir build && cd build
+	
+	$ cmake ..
+	
+	$ make
+	
+	$ ./Telepaartie {2,4,7}
+
+\end{lstlisting}
+
+\subsection*{ Der Baum }
+
+Die Knoten werden bei mir im Code durch die Klasse `TreeNode` repräsentiert. Sie speichert die aktuelle Configuration sowie den Parent und alle ihre Nachkommen. Zudem bietet die Klasse auch die oben besprochenen Methoden an: 
+
+
+\end{document}
