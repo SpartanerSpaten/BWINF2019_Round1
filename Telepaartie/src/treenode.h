@@ -12,8 +12,10 @@
 
 #define COLLUMNS 3
 
-static unsigned int numchilds;
-static uint16_t * constraint ;
+namespace Global{
+    static unsigned int numchilds;
+    static uint16_t * constraint ;
+}
 
 class TreeNode {
 public:
@@ -22,7 +24,7 @@ public:
     ~TreeNode();
 
     // for easy stdout piping
-    std::ostream& operator<<(std::ostream&);
+    friend std::ostream& operator<<(std::ostream& os, const TreeNode& obj);
 
     // teleports something creates new Tree Node
     //TreeNode * teleport(uint16_t, uint16_t);

@@ -3,6 +3,7 @@
 //
 
 #include "./src/treenode.h"
+#include "./src/functions.h"
 #include <iostream>
 #define MAXITERATIONS 6
 
@@ -44,7 +45,7 @@ std::vector<TreeNode*> iterate(unsigned int data[COLLUMNS]){
             for (unsigned int i = 0; i < iteration_size;i++){
                 temp_new_partents.insert(temp_new_partents.end(), parents[i]->children.begin(), parents[i]->children.end());
             }
-            iteration_size = parents.size();
+            iteration_size = temp_new_partents.size();
             parents = temp_new_partents;
         }
         current_iter++;
@@ -59,26 +60,36 @@ std::vector<TreeNode*> iterate(unsigned int data[COLLUMNS]){
 }
 
 
-int main (int argc, char *argv[]){
+int main (int argc, char *argv[]) {
 
     unsigned int data[COLLUMNS];
 
     std::cout << "============================== Telepaartie Aufgabe3 ==============================" << std::endl;
 
-    for (int i = 0; i < 3; i++){
-        data[i] = std::stoi(argv[i + 1]);
+    int place = 0;
+    std::string temp_string;
+    for (int i = 0; i < 3; i++) {
+        temp_string = std::string(argv[i + 1]);
+        if (Func::validates_input(temp_string)) {
+            data[place] = std::stoi(argv[i + 1]);
+            place++;
+        }
+
     }
+    std::cout << std::endl;
 
-    std::vector<TreeNode*> leave_nodes = iterate(data);
+    std::vector<TreeNode *> leave_nodes = iterate(data);
 
-    TreeNode * current; TreeNode * head;
+    TreeNode *current;
+    TreeNode *head;
 
-    for( int i = 0; i < leave_nodes.size();i++){
+    for (int i = 0; i < leave_nodes.size(); i++) {
+        std::cout << "********** Solution: " << i << " **********" << std::endl;
         current = leave_nodes[i];
-        while (current != nullptr){
-            current->operator<<(std::cout);
+        while (current != nullptr) {
+            std::cout << *current << std::endl;
             current = current->parent;
-            if (current->parent == nullptr){
+            if (current != nullptr && current->parent == nullptr) {
                 head = current;
             }
         }
@@ -86,8 +97,4 @@ int main (int argc, char *argv[]){
     delete head;
 
     return 0;
-
-
-
-
 }

@@ -13,6 +13,7 @@ namespace Func{
     bool check_other_ind( uint16_t x , uint16_t y, const unsigned int colls[COLLUMNS]);
     uint16_t sum_range(unsigned short x);
     TreeNode * easy_teleport(TreeNode* o, unsigned int colls[COLLUMNS], uint16_t x, uint16_t y);
+    bool validates_input(std::string &);
 
 }
 #endif //TELEPAARTIE_FUNCTIONS_H
