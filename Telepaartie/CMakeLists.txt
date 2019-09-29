@@ -3,4 +3,4 @@ project(Telepaartie)
 
 set(CMAKE_CXX_STANDARD 14)
 
-add_executable(Telepaartie main.cpp src/container.h src/container.cpp src/treenode.h src/treenode.cpp)
+add_executable(Telepaartie main.cpp src/treenode.h src/treenode.cpp src/functions.cpp src/functions.h)

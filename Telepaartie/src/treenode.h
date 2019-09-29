@@ -21,10 +21,8 @@ public:
     TreeNode(TreeNode*, unsigned int[COLLUMNS]);
     ~TreeNode();
 
-    std::vector<TreeNode*> return_too_root();
-
     // for easy stdout piping
-    friend std::ostream& operator<<(std::ostream&, const TreeNode&);
+    std::ostream& operator<<(std::ostream&);
 
     // teleports something creates new Tree Node
     //TreeNode * teleport(uint16_t, uint16_t);
@@ -36,7 +34,7 @@ public:
 
     void generate_childs();
 
-    std::vector<unsigned int> checking_childs();
+    TreeNode * finish();
 
     static void init();
 
@@ -46,13 +44,14 @@ public:
         memcpy(colls, x, sizeof(int) * COLLUMNS);
     }
 
+    std::vector<TreeNode*> children;
+    TreeNode * parent;
+
 protected:
 
     unsigned int colls[COLLUMNS];
 
     size_t childs, constraints;
-    std::vector<TreeNode*> children;
-    TreeNode * parent;
 
 };
 

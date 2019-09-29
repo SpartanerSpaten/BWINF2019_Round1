@@ -17,7 +17,7 @@
 
 Eine LLL kann nur entstehen wenn dafor zwei Spalten die gleiche anzahl Objekte beinhalten(a,b,c \dots Spalten) \( a = b\) Somit würde auch gleich einen Schritt zufor gelten z.B 
 \begin{equation}
-	(2a = b \wedge a < c)  \oplus (2b = a \wedge b < c)
+	((2a = b \wedge a < c)  \oplus (2b = a \wedge b < c)) \oplus ((3a = b)  \oplus (3b = a))
 \end{equation}
 
 Mit diesem Wissen können wir Mögliche LLLs zwei Schichten vorraus sagen. Zudem möchte ich noch kurz darauf aufmerksam machen das \(a>c\) oder \(b > c\) bei  \( \leq \) würde Regel 1.) greifen. Diese Aufgestellten beobachtungen helfen uns nun die Zu untersuchenden Möglichkeite um zwei Schichten immer zu reduzieren.
@@ -33,7 +33,7 @@ Die einzig wirklich Sinnvolle Datenstrukturelle darstellung ist als Baum. Der fo
 \(N\)\dots    					Anzahl der Schichten bis LLL gefunden wird
 
 \begin{equation}
-	max_c = collumns ^ 2 - collumns
+	max_c =  \sum \limits_{i=0}^N  i
 \end{equation}
 
 Das sind natürlich nur worst case betrachtungen und mit intelligentem z.B Ausschließen von Doppelten lässt sich die gesamt anzahl Knoten stark minimieren. Somit ergibt sich für Anzahl der Knoten im gesamten Baum die Funktion: \newline
@@ -71,7 +71,7 @@ Ich würde sehr dringend raten den gcc (g++) \(\rightarrow\) die GNU Build Essen
 
 \subsection*{ Der Baum }
 
-Die Knoten werden bei mir im Code durch die Klasse `TreeNode` repräsentiert. Sie speichert die aktuelle Configuration sowie den Parent und alle ihre Nachkommen. Zudem bietet die Klasse auch die oben besprochenen Methoden an: 
+Die Knoten werden bei mir im Code durch die Klasse `TreeNode` repräsentiert. Sie speichert die aktuelle Configuration sowie den Parent und alle ihre Nachkommen. Zudem bietet die Klasse auch die oben besprochenen Methoden an:  
 
 
 \end{document}
