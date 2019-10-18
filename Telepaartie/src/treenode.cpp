@@ -7,8 +7,8 @@
 #include <iostream>
 
 void TreeNode::init() {
-    Global::numchilds = Func::sum_range(COLLUMNS);
-    Global::constraint = (uint16_t*) malloc(( Global::numchilds * 2) * sizeof(uint16_t));
+    Global::numchilds = Func::sumRange(COLLUMNS);
+    Global::constraint = new uint16_t[Global::numchilds * 2];
     int i = 0;
     for (int x = 0; x < ceil(COLLUMNS / 2)+1; x++){
         for(int y = ceil(COLLUMNS / 2); y < COLLUMNS;y++){
@@ -39,7 +39,8 @@ TreeNode::~TreeNode() {
 
 std::tuple<bool, uint16_t, uint16_t> TreeNode::check() {
     for (int x = 0; x <  Global::numchilds * 2; x+= 2){
-        if ((colls[ Global::constraint[x]] == 2 * colls[ Global::constraint[x+1]] || colls[ Global::constraint[x+1]] == 2 * colls[x]) && Func::check_other_ind(Global::constraint[x],Global::constraint[x+1], colls)){
+        if ((colls[ Global::constraint[x]] == 2 * colls[ Global::constraint[x+1]] || colls[ Global::constraint[x+1]] == 2 * colls[x]) &&
+                Func::checkOtherIndep(Global::constraint[x], Global::constraint[x + 1], colls)){
             return std::make_tuple(true,  Global::constraint[x],  Global::constraint[x+1]);
         }else if (colls[ Global::constraint[x]] == colls[ Global::constraint[x+1]] ){
             return std::make_tuple(true,  Global::constraint[x],  Global::constraint[x+1]);
@@ -57,14 +58,14 @@ void TreeNode::random() {
     }
 }
 
-void TreeNode::generate_childs() {
+void TreeNode::generateChilds() {
     int status = 0;
     TreeNode * j;
     for (int x = 0; x <  Global::numchilds+2; x+= 2){
         if (status == 0){
             j = new TreeNode(this);
         }
-        j->setcolls(this->colls);
+        j->setColls(this->colls);
         status = j->teleport(  Global::constraint[x],  Global::constraint[x+1]);
         if (status == 0){
             children.push_back(j);
@@ -98,23 +99,24 @@ TreeNode* TreeNode::finish() {
     if (!std::get<0>(x))return this;
 
     if(colls[std::get<1>(x)] == colls[std::get<2>(x)]){
-        ret = Func::easy_teleport(this, this->colls, std::get<1>(x),std::get<2>(x));
+        ret = Func::easyTeleport(this, this->colls, std::get<1>(x), std::get<2>(x));
         return ret;
-    }else  if ((colls[std::get<1>(x)] == 2 * colls[std::get<2>(x)] || colls[std::get<2>(x)] == 2 * colls[std::get<1>(x)]) && Func::check_other_ind(std::get<1>(x), std::get<2>(x),colls)){
+    }else  if ((colls[std::get<1>(x)] == 2 * colls[std::get<2>(x)] || colls[std::get<2>(x)] == 2 * colls[std::get<1>(x)]) &&
+            Func::checkOtherIndep(std::get<1>(x), std::get<2>(x), colls)){
         temp = new TreeNode(this);
-        temp->setcolls(colls);
-        uint16_t other = Func::find_other(std::get<1>(x),std::get<2>(x));
+        temp->setColls(colls);
+        uint16_t other = Func::findOther(std::get<1>(x), std::get<2>(x));
         if (colls[std::get<1>(x)] > colls[std::get<2>(x)]){
             temp->teleport(other, std::get<2>(x));
         }else{
             temp->teleport(std::get<1>(x), other);
         }
-        ret = Func::easy_teleport(temp, temp->colls, std::get<1>(x),std::get<2>(x));
+        ret = Func::easyTeleport(temp, temp->colls, std::get<1>(x), std::get<2>(x));
         return ret;
 
     } else if (colls[std::get<1>(x)] == 3 * colls[std::get<2>(x)] || colls[std::get<2>(x)] == 3 * colls[std::get<1>(x)]){
-        temp = Func::easy_teleport(this, this->colls, std::get<1>(x),std::get<2>(x));
-        ret = Func::easy_teleport(temp, temp->colls, std::get<1>(x),std::get<2>(x));
+        temp = Func::easyTeleport(this, this->colls, std::get<1>(x), std::get<2>(x));
+        ret = Func::easyTeleport(temp, temp->colls, std::get<1>(x), std::get<2>(x));
         return ret;
     }
     return nullptr;

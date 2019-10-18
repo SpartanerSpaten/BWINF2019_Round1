@@ -8,12 +8,12 @@
 
 namespace Func{
 
-    uint16_t find_other(uint16_t x, uint16_t y);
-    bool checkother(uint16_t x , const unsigned int colls[COLLUMNS]);
-    bool check_other_ind( uint16_t x , uint16_t y, const unsigned int colls[COLLUMNS]);
-    uint16_t sum_range(unsigned short x);
-    TreeNode * easy_teleport(TreeNode* o, unsigned int colls[COLLUMNS], uint16_t x, uint16_t y);
-    bool validates_input(std::string &);
+    uint16_t findOther(uint16_t x, uint16_t y);
+    bool checkOther(uint16_t x , const unsigned int *colls);
+    bool checkOtherIndep(uint16_t x , uint16_t y, const unsigned int *colls);
+    uint16_t sumRange(unsigned short x);
+    TreeNode * easyTeleport(TreeNode* o, unsigned int *colls, uint16_t x, uint16_t y);
+    bool validatesInput(std::string &);
 
 }
 #endif //TELEPAARTIE_FUNCTIONS_H

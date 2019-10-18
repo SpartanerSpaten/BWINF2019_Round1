@@ -34,7 +34,7 @@ public:
 
     void random();
 
-    void generate_childs();
+    void generateChilds();
 
     TreeNode * finish();
 
@@ -42,7 +42,7 @@ public:
 
     int teleport(uint16_t, uint16_t);
 
-    void setcolls(unsigned int x[COLLUMNS]){
+    void setColls(unsigned int *x){
         memcpy(colls, x, sizeof(int) * COLLUMNS);
     }
 

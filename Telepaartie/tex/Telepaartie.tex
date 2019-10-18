@@ -49,13 +49,23 @@ Wie schon im ersten Abschnitt angesprochen können wir das N um zwei Reduzieren 
 Auch wenn die Datenstruktur "Baum" immer sehr einladend ist rekursiv zu Arbeiten (Suchen) ist sie für unseren fall hier äußerst ungeignet da wir damit sehr viele ungenutzte Knoten erzeugen was sehr unperformant ist. Weswegen wir alle Kinder aller Knoten einer Schicht erzeugen lassen und diese dann dann abprüfen ob sie die Kriterien in 1.) erfüllen. Damit erhältman ein bessere Average performance.
 
 
+\subsection*{ Aufstellen der Verteilung }
+
+
+\begin{equation}
+	max(x, y)  = x ; x > y , y ; y > x \newline
+	min(x, y) = 	
+\end{equation}
+
+
+
 \section{ Implementierung }
 
 Das Programm wurde mit C++ (C11) Implementiert das ist hatt den Vorteil das ich meine Knoten als Objekte und den Parent und die Childs einfach als Pointer Speichern kann. Zudem habe ich den Großen Performance Vorteil als Complalierte Sprache den ich definitiv brauche.
 
 \subsection*{ Zum Laufen Kriegen }
 
-Ich würde sehr dringend raten den gcc (g++) \(\rightarrow\) die GNU Build Essentials zu nutzen. Weil ich nicht dafür Guarntieren kann das es z.B mit VSCODE oder clang-tidy geht.
+Ich würde sehr dringend raten den gcc (g++) \(\rightarrow\) die GNU Build Essentials zu nutzen. Weil ich nicht dafür Guarntieren kann das es z.B mit VSCODE oder clang geht.
 
 \begin{lstlisting}[language=Bash]
 	
@@ -65,13 +75,13 @@ Ich würde sehr dringend raten den gcc (g++) \(\rightarrow\) die GNU Build Essen
 	
 	$ make
 	
-	$ ./Telepaartie {2,4,7}
+	$ ./Telepaartie 2 4 7
 
 \end{lstlisting}
 
 \subsection*{ Der Baum }
 
-Die Knoten werden bei mir im Code durch die Klasse `TreeNode` repräsentiert. Sie speichert die aktuelle Configuration sowie den Parent und alle ihre Nachkommen. Zudem bietet die Klasse auch die oben besprochenen Methoden an:  
+Die Knoten werden bei mir im Code durch die Klasse `TreeNode` repräsentiert. Sie speichert die aktuelle Configuration sowie den Parent und alle ihre Nachkommen. Zudem bietet die Klasse auch die oben besprochenen Methoden an sowas wie check (verweiß auf 1.1) oder generieren neuen nachkommen.
 
 
 \end{document}

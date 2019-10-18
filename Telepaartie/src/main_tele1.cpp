@@ -2,8 +2,8 @@
 // Created by worker on 9/26/19.
 //
 
-#include "./src/treenode.h"
-#include "./src/functions.h"
+#include "./treenode.h"
+#include "./functions.h"
 #include <iostream>
 #define MAXITERATIONS 6
 
@@ -14,7 +14,7 @@ std::vector<TreeNode*> iterate(unsigned int data[COLLUMNS]){
     auto * root = new TreeNode(nullptr);
 
     // Sets Start data
-    root->setcolls(data);
+    root->setColls(data);
     TreeNode * focus;
 
     unsigned short current_iter = 0;
@@ -37,7 +37,7 @@ std::vector<TreeNode*> iterate(unsigned int data[COLLUMNS]){
                 pathtolll.push_back(parents[i]);
                 done_flag = true;
             }else {
-                parents[i]->generate_childs();
+                parents[i]->generateChilds();
             }
         }
         if (!done_flag){
@@ -70,7 +70,7 @@ int main (int argc, char *argv[]) {
     std::string temp_string;
     for (int i = 0; i < 3; i++) {
         temp_string = std::string(argv[i + 1]);
-        if (Func::validates_input(temp_string)) {
+        if (Func::validatesInput(temp_string)) {
             data[place] = std::stoi(argv[i + 1]);
             place++;
         }

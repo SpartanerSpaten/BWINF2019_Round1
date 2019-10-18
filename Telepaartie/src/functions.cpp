@@ -5,25 +5,25 @@
 #include <algorithm>
 #include <iostream>
 
-uint16_t Func::find_other(uint16_t x, uint16_t y){
+uint16_t Func::findOther(uint16_t x, uint16_t y){
     if((x==0&&y==1)||(x==1&&y==0))return 2;
     else if((x==1&&y==2)||(x==2&&y==1))return 0;
     else if((x==0&&y==2)||(x==2&&y==0))return 1;
     return 0;
 }
 
-bool Func::checkother(uint16_t x , const unsigned int colls[COLLUMNS]){
+bool Func::checkOther(uint16_t x , const unsigned int *colls){
     std::cout << Global::constraint;
-    uint16_t other = Func::find_other( Global::constraint[x], Global::constraint[x+1]);
+    uint16_t other = Func::findOther(Global::constraint[x], Global::constraint[x + 1]);
     return  (colls[other] > colls[ Global::constraint[x]]) || (colls[other] > colls[ Global::constraint[x+1]]);
 }
 
-bool Func::check_other_ind( uint16_t x , uint16_t y, const unsigned int colls[COLLUMNS]){
-    uint16_t other = Func::find_other(x,y);
+bool Func::checkOtherIndep(uint16_t x , uint16_t y, const unsigned int *colls){
+    uint16_t other = Func::findOther(x, y);
     return  (colls[other] > colls[x]) || (colls[other] > colls[y]);
 }
 
-uint16_t Func::sum_range(unsigned short x){
+uint16_t Func::sumRange(unsigned short x){
     uint16_t ret = 0;
     for (int i = 0; i < x; i++){
         ret += i;
@@ -31,14 +31,14 @@ uint16_t Func::sum_range(unsigned short x){
     return ret;
 }
 
-TreeNode * Func::easy_teleport(TreeNode* o,unsigned int colls[COLLUMNS], uint16_t x, uint16_t y){
+TreeNode * Func::easyTeleport(TreeNode* o, unsigned int *colls, uint16_t x, uint16_t y){
     auto * temp = new TreeNode(o);
-    temp->setcolls(colls);
+    temp->setColls(colls);
     temp->teleport(x, y);
     return temp;
 }
 
-bool Func::validates_input(std::string &x ) {
+bool Func::validatesInput(std::string &x ) {
     return !x.empty() && std::find_if(x.begin(),
                                       x.end(), [](char c) { return !std::isdigit(c); }) == x.end();
 }
