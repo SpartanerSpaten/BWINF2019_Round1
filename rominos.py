@@ -1,9 +1,9 @@
-class Romino:
+﻿class Romino:
     def __init__(self, coords):
         self.coords = self.__normalise(coords)
         self.variants = self.get_variants()
     
-    def __normalise(self, coords):                              # move romino to touch x and y axis
+    def __normalise(self, coords):                                  # move romino to touch x and y axis
 	    smallest_x = None
 	    smallest_y = None
 	    for x, y in coords:
@@ -58,8 +58,19 @@ class Romino:
         else:
             raise NotImplementedError
 
-    def upgrade(self):
+    def upgrade(self):                                              # upgrade to n + 1 romino
         pass
 
-    def draw(self):
-        pass
+    def draw(self):                                                 # draw romino (currently ASCII style)
+        grid = {}
+        for x, y in self.coords:
+            if y not in grid:                                       # expand grid
+               grid[y] = []
+            if x > len(grid[y]):                                    # expand list
+                for i in range(len(grid[y]), x):
+                    grid[y].append(" ")                             # fill empty space
+            grid[y][x - 1] = "#"
+        for row in sorted(grid.keys(), reverse=True):               # print every row starting with highest y
+            for i in grid[row]:
+                print(i, end="")
+            print()                                                 # new line
