@@ -1,71 +1,65 @@
-﻿#!/usr/bin/python3
-import sys
+class Romino:
+    def __init__(self, coords):
+        self.coords = self.__normalise(coords)
+        self.variants = self.get_variants()
+    
+    def __normalise(self, coords):                              # move romino to touch x and y axis
+	    smallest_x = None
+	    smallest_y = None
+	    for x, y in coords:
+	    	if smallest_x == None or x < smallest_x:
+	    		smallest_x = x
+	    	if smallest_y == None or y < smallest_y:
+	    		smallest_y = y
+	    div_x = 1 - smallest_x
+	    div_y = 1 - smallest_y
+	    if not (div_x == 0 and div_y == 0):							# need adjustment
+	    	new_coords = []
+	    	for x, y in coords:
+	    		new_coords.append((x + div_x, y + div_y))
+	    	return frozenset(new_coords)
+	    else:
+	    	return frozenset(coords)
 
-def get_sourrounding_coords(coord):								# return all coords around this coord
-	x_base, y_base = coord
-	coords = []
-	for x_coord in (x_base - 1, x_base, x_base + 1):
-		for y_coord in (y_base - 1, y_base, y_base + 1):
-			coords.append((x_coord, y_coord))
-	del coords[4]												# remove base coord
-	return coords
+    def get_variants(self):                                         # get all twisted and mirrored variants, including normal version
+        variants = []
+        for twist in self.__get_twists(self.coords):
+            variants.append(self.__normalise(twist))
+            for mirror in self.__get_mirrors(twist):
+                variants.append(self.__normalise(mirror))
+        return frozenset(variants)
 
-def get_free_border_squares(romino):							# get coords off free squares next to romino squares
-	coords = set()												# prevent duplicates
-	for square in romino:
-		for coord in get_sourrounding_coords(square):
-			if coord not in romino:
-				coords.add(coord)
-	return coords
-	
-def get_romino_pairs(romino, free_border_squares):				# get all sqare pairs wich are touching at one corner and dont have the same neighbor square
-	pass
-	# TODO
+    def __get_mirrors(self, coords):                                # get 1., 2. and 3. mirror
+        mirror_1 = []                                               # coords on Y
+        mirror_2 = []                                               # mirror_1 on X
+        mirror_3 = []                                               # coords on X
+        for x, y in coords:
+            mirror_1.append((-x, y))
+            mirror_2.append((-x, -y))
+            mirror_3.append((x, -y))
+        return frozenset(mirror_1), frozenset(mirror_2), frozenset(mirror_3)
 
-def upgrade_rominos(rominos):									# upgrade from n rominos to n+1 rominos
-	return 0
-	# TODO
+    def __get_twists(self, coords):                                 # get 1., 2. and 3. twist, including base
+        twist_1 = []                                                # + 90°
+        twist_2 = []                                                # + 180°
+        twist_3 = []                                                # - 90°
+        for x, y in coords:
+            twist_1.append((-y, x))
+            twist_2.append((-x, -y))
+            twist_3.append((y, -x))
+        return frozenset(coords), frozenset(twist_1), frozenset(twist_2), frozenset(twist_3)
 
-def get_mirrors(romino):										# mirror along x and y axis
-	pass
-	# TODO
+    def __hash__(self):                                             # with __eq__ for use in set()
+        return hash(self.variants)
 
-def normalise(romino):											# move romino to touch x and y axis
-	smallest_x = None
-	smallest_y = None
-	for x, y in romino:
-		if smallest_x == None or x < smallest_x:
-			smallest_x = x
-		if smallest_y == None or y < smallest_y:
-			smallest_y = y
-	div_x = 0 - smallest_x
-	div_y = 0 - smallest_y
-	if not (div_x == 0 and div_y == 0):							# need adjustment
-		new_romino = []
-		for x, y in romino:
-			new_romino.append((x + div_x, y + div_y))
-		return frozenset(new_romino)
-	else:
-		return romino
+    def __eq__(self, sample):
+        if isinstance(sample, type(self)):
+            return self.variants == sample.variants
+        else:
+            raise NotImplementedError
 
-def get_int(question):											# get integer from user
-	while True:
-		text = input(question)
-		if text.isdecimal():
-			return int(text)
-		else:
-			print("Fehler: Sie haben keine Nummer eingegeben")
+    def upgrade(self):
+        pass
 
-def draw(romino):
-	print(romino)
-	# TODO
-
-rominos = {frozenset(((0, 0), (1, 1)))}									# structure: {frozenset(((x, y), ...)), ...}, starting rominos (n=2)
-n = get_int("Aus wie vielen Quadraten sollen die Rominos bestehen? ")
-if n >= 2:
-	for i in range(2, n):												# Determine number recursively
-		rominos = upgrade_rominos(rominos)
-	draw(rominos)
-	sys.exit(0)
-else:
-	print("Für n kleiner als 2 existieren keine Rominos")				# rominos have at least 2 squares
+    def draw(self):
+        pass
