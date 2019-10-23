@@ -1,4 +1,6 @@
-﻿class Romino:
+﻿import argparse
+
+class Romino:
     def __init__(self, coords):
         self.coords = self.__normalise(coords)
 
@@ -100,30 +102,29 @@
             print()                                                 # new line
 
 
-def get_int(question):										    	# get integer from user
-	while True:
-		text = input(question)
-		if text.isdecimal():
-			return int(text)
-		else:
-			print("Fehler: Sie haben keine Nummer eingegeben")
-
-
 if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description="Program to calculate and display Rominos")
+    parser.add_argument("n", type=int, help="Number of Squares in Rominos")
+    parser.add_argument("--draw", help="Draw Rominos" , action="store_true")
+    parser.add_argument("--show-steps", help="Show number for every generated n", action="store_true")
+    args = parser.parse_args()
+
     rominos = set((Romino(((0, 0), (1, 1))), ))
-    n = get_int("Value of n: ")
-    if n >= 2:
-        for i in range(2, n):                                       # Determine number recursively
+    if args.n >= 2:
+        for i in range(2, args.n):                                  # Determine number recursively
             print("Generating Rominos for n = %s" % (i + 1))
             new_rominos = set()
             for romino in rominos:
                 for upgraded_romino in romino.upgrade():
                     new_rominos.add(Romino(upgraded_romino))
+            if args.show_steps:
+                print("Length: %s" % len(new_rominos))
             rominos = new_rominos
         print("============= Result =============")
-        for romino in rominos:
-            print()
-            romino.draw()
+        if args.draw:                                               # skip drawing if false
+            for romino in rominos:
+                print()                                             # add newline for better Overview
+                romino.draw()
         print("Rominos: %s" % len(rominos))
     else:
-        print("There are no Rominos for n < 2")
+        print("There are no Rominos for n < 2")                     # Rominos have to contain a Romino-pair, wich is consisting of at least 2 squares
