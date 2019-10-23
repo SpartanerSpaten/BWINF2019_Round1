@@ -1,14 +1,13 @@
 ﻿class Romino:
     def __init__(self, coords):
         self.coords = self.__normalise(coords)
-        self.variants = self.get_variants()
 
     def __hash__(self):                                             # with __eq__ for use in set()
-        return hash(self.variants)
+        return hash(self.get_variants())
 
     def __eq__(self, sample):
         if isinstance(sample, type(self)):
-            return self.variants == sample.variants
+            return self.get_variants() == sample.get_variants()
         else:
             raise NotImplementedError
     
@@ -60,14 +59,11 @@
 
     def upgrade(self):                                              # upgrade to n + 1 rominos
         rominos = []
-        reserved_coords = []                                        # coords who are part of romino pairs
-        for neighbor1, neighbor2 in self.get_romino_pairs():
-            reserved_coords.append((neighbor1[0], neighbor2[1]))    # append both same neighbors
-            reserved_coords.append((neighbor2[0], neighbor1[1]))
-        free_coords = self.get_free_border_coords().difference(reserved_coords) # get free coords not in pair
-        for free_coord in free_coords:
-            rominos.append(frozenset(tuple(self.coords) + (free_coord, )))  # add free coord to self
-        return rominos                                              # TODO: add case multiple pairs
+        for free_coord in self.get_free_border_coords():
+            romino = self.coords.union((free_coord, ))              # add free coord to self
+            if self.__is_romino(romino):
+                rominos.append(romino)
+        return rominos
 
     def __get_sourrounding_coords(self, coord):                     # return all coords around this coord
         x, y = coord
@@ -81,14 +77,13 @@
                     free_coords.add(sourrounding_coord)
         return free_coords
 
-    def get_romino_pairs(self):                                     # get all square pairs wich are touching at one corner and dont have the same neighbor square
-        pairs = set()
-        for x, y in self.coords:
-            for neighbor_x, neighbor_y in (x + 1, y + 1), (x + 1, y - 1), (x - 1, y + 1), (x - 1, y - 1):	# for all diagonal neighbors
-                if (neighbor_x, neighbor_y) in self.coords:
-                    if (x, neighbor_y) not in self.coords and (neighbor_x, y) not in self.coords:			# if same neighbors are empthy
-                        pairs.add(frozenset(((x, y), (neighbor_x, neighbor_y))))                            # prevent twisted duplicates
-        return pairs
+    def __is_romino(self, coords):                                  # check for at least 1 existing pair
+        for x, y in coords:
+            for neighbor_x, neighbor_y in (x + 1, y + 1), (x + 1, y - 1), (x - 1, y + 1), (x - 1, y - 1):   # check all diagonal neighbors
+                if (neighbor_x, neighbor_y) in coords:                                                      # exists
+                    if (x, neighbor_y) not in coords and (neighbor_x, y) not in coords:			            # if same neighbors are empthy
+                        return True                                                                         # at least 1 pair is existing
+        return False                                                                                        # no pair was found
 
     def draw(self):                                                 # draw romino (currently ASCII style)
         grid = {}
@@ -115,7 +110,7 @@ def get_int(question):										    	# get integer from user
 
 
 if __name__ == "__main__":
-    rominos = frozenset((Romino(((0, 0), (1, 1))), ))
+    rominos = set((Romino(((0, 0), (1, 1))), ))
     n = get_int("Value of n: ")
     if n >= 2:
         for i in range(2, n):                                       # Determine number recursively
@@ -126,9 +121,9 @@ if __name__ == "__main__":
                     new_rominos.add(Romino(upgraded_romino))
             rominos = new_rominos
         print("============= Result =============")
-        print("Rominos: %s" % len(rominos))
         for romino in rominos:
             print()
             romino.draw()
+        print("Rominos: %s" % len(rominos))
     else:
         print("There are no Rominos for n < 2")
