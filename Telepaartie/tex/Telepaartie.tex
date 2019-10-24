@@ -1,6 +1,7 @@
 \documentclass{article}
 \usepackage{graphicx}
 \usepackage{listings}
+\usepackage{amsmath}
 
 %\graphicspath{ {../resources/} }
 
@@ -49,18 +50,41 @@ Wie schon im ersten Abschnitt angesprochen können wir das N um zwei Reduzieren 
 Auch wenn die Datenstruktur "Baum" immer sehr einladend ist rekursiv zu Arbeiten (Suchen) ist sie für unseren fall hier äußerst ungeignet da wir damit sehr viele ungenutzte Knoten erzeugen was sehr unperformant ist. Weswegen wir alle Kinder aller Knoten einer Schicht erzeugen lassen und diese dann dann abprüfen ob sie die Kriterien in 1.) erfüllen. Damit erhältman ein bessere Average performance.
 
 
-\subsection*{ Aufstellen der Verteilung }
+\subsection*{ Weitere Beobachtungen der Aufgabe }
+
+\subsection*{ Formaler Ausdruck }
 
 
+\begin{gather}
+    f(x, y) =  
+    \begin{cases}
+    	(2x, y - x)		\quad x < y \\
+    	(x - y, 2y) 		\quad y < x
+    \end{cases}
+\end{gather}
+
+f is not fully periodical there a sometimes pair that come before periodical process starts. \newline
+
+\(A_n\)\dots all possible Tuples (Pairs)
 \begin{equation}
-	max(x, y)  = x ; x > y , y ; y > x \newline
-	min(x, y) = 	
+	A_n = \lbrace (x, y) \in D \mid f(x, y) \rbrace
 \end{equation}
+\begin{equation}
+	A_n \cap A_k :\Longleftrightarrow \lbrace \rbrace \mid k \neq n
+\end{equation}
+%Daraus ergibt sich das jedes mögliche Zahlenpaar genau in einer Menge vorkommt.
+We can conclude that every possible pair is member of exact one set. What happens now when we observe more than just x,y and add c we can this now describe as 3 pairs (x, y), (x, c), (y, c). The sets are staying the same. \newline
 
+We will not introduce a category for sets which include a 0 as one of the two numbers
+\begin{equation}
+	(0, x) \in A_n \vee (x, 0) \in A_n
+\end{equation}
+These sets I will call null terminating.
+
+Returning to the original question we are starting searching from all null terminating sets. Lets assume for demonstrational purposes that we have a sum of 9. Means we have four null terminating sequences ((0, 4) 5), ((0, 8),1), ((0, 2),7), ((0, 6),3) for the person woundering why its only 4 because the question requires that we make it hard for the solving algorithm and its impossible for the solving algo. to get too those other results.
 
 
 \section{ Implementierung }
-
 Das Programm wurde mit C++ (C11) Implementiert das ist hatt den Vorteil das ich meine Knoten als Objekte und den Parent und die Childs einfach als Pointer Speichern kann. Zudem habe ich den Großen Performance Vorteil als Complalierte Sprache den ich definitiv brauche.
 
 \subsection*{ Zum Laufen Kriegen }
