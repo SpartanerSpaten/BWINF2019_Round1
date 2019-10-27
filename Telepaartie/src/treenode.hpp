@@ -102,7 +102,9 @@ public:
     ~TreeNodeBackward();
 
 
-    void move(unsigned int, unsigned int) override;
+    void move(unsigned int, unsigned int, bool);
+
+    void move(unsigned int, unsigned int);
 
     void generateChildren() override;
 
@@ -111,6 +113,8 @@ public:
     TreeNodeBackward *finish();
 
     bool search(std::vector<unsigned int> &, bool);
+
+    void advancedMove(unsigned int, unsigned int);
 
     void insertChildren(std::vector<TreeNodeBackward *> &insertInto) {
         insertInto.insert(insertInto.end(), children.begin(), children.end());

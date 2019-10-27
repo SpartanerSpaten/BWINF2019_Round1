@@ -89,7 +89,7 @@ void TreeNodeForward::generateChildren() {
 std::tuple<bool, unsigned int, unsigned int> TreeNodeForward::preWarn() {
     for (unsigned int x = 0; x < Global::numChilds * 2; x += 2) {
         if ((columns[Global::constraint[x]] == 2 * columns[Global::constraint[x + 1]] ||
-             columns[Global::constraint[x + 1]] == 2 * columns[x]) &&
+             columns[Global::constraint[x + 1]] == 2 * columns[Global::constraint[x]]) &&
             Func::checkOtherIndep(Global::constraint[x], Global::constraint[x + 1], columns)) {
             return std::make_tuple(true, Global::constraint[x], Global::constraint[x + 1]);
         } else if (columns[Global::constraint[x]] == columns[Global::constraint[x + 1]]) {
@@ -163,11 +163,11 @@ TreeNodeBackward::~TreeNodeBackward() {
     }
 }
 
-void TreeNodeBackward::move(unsigned int x, unsigned int y) {
-    if (columns[x] > columns[y] && columns[x] % 2 == 0) {
+void TreeNodeBackward::move(unsigned int x, unsigned int y, bool sec) {
+    if (columns[x] > columns[y] && columns[x] % 2 == 0 && sec) {
         columns[x] /= 2;
         columns[y] += columns[x];
-    } else if (columns[y] > columns[x] && columns[y] % 2 == 0) {
+    } else if (columns[y] > columns[x] && columns[y] % 2 == 0 && sec) {
         columns[y] /= 2;
         columns[x] += columns[y];
     } else if (columns[x] > columns[y] && columns[y] % 2 == 0) {
@@ -179,13 +179,19 @@ void TreeNodeBackward::move(unsigned int x, unsigned int y) {
     }
 }
 
-void TreeNodeBackward::generateChildren() {
-    TreeNodeBackward *j = nullptr;
-    for (unsigned int x = 0; x < Global::numChilds + 2; x += 2) {
-
+void TreeNodeBackward::advancedMove(unsigned int x, unsigned int y) {
+    auto *j = new TreeNodeBackward(this, columns);
+    j->move(x, y, true);
+    if (!j->search(j->columns, false)) {
+        children.push_back(j);
+        childs++;
+    } else {
+        delete j;
+    }
+    if (columns[x] % 2 == 0 and columns[y] % 2 == 0) {
         j = new TreeNodeBackward(this, columns);
-        j->move(Global::constraint[x], Global::constraint[x + 1]);
-        if (!j->search(j->columns, true)) {
+        j->move(y, x, false);
+        if (!j->search(j->columns, false)) {
             children.push_back(j);
             childs++;
         } else {
@@ -194,15 +200,24 @@ void TreeNodeBackward::generateChildren() {
     }
 }
 
+void TreeNodeBackward::move(unsigned int, unsigned int) {}
+
+
+void TreeNodeBackward::generateChildren() {
+    for (unsigned int x = 0; x < Global::numChilds * 2; x += 2) {
+        advancedMove(Global::constraint[x], Global::constraint[x + 1]);
+    }
+}
+
 bool TreeNodeBackward::search(std::vector<unsigned int> &s, bool pass) {
     // The boolean value ist just preventing that it compares it to it self
     std::sort(s.begin(), s.end());
     std::sort(columns.begin(), columns.end());
-    if (s == columns && !pass) {
+    if (s == columns && pass) {
         return true;
     }
     if (parent != nullptr) {
-        return parent->search(s, false);
+        return parent->search(s, true);
     }
     return false;
 }
@@ -210,13 +225,21 @@ bool TreeNodeBackward::search(std::vector<unsigned int> &s, bool pass) {
 std::tuple<bool, unsigned int, unsigned int> TreeNodeBackward::preWarn() {
     for (unsigned int x = 0; x < Global::numChilds * 2; x += 2) {
         if ((columns[Global::constraint[x]] == 2 * columns[Global::constraint[x + 1]] ||
-             columns[Global::constraint[x + 1]] == 2 * columns[x]) &&
+             columns[Global::constraint[x + 1]] == 2 * columns[Global::constraint[x]]) &&
             Func::checkOtherIndep(Global::constraint[x], Global::constraint[x + 1], columns)) {
             return std::make_tuple(true, Global::constraint[x], Global::constraint[x + 1]);
         } else if (columns[Global::constraint[x]] == columns[Global::constraint[x + 1]]) {
             return std::make_tuple(true, Global::constraint[x], Global::constraint[x + 1]);
         } else if ((columns[Global::constraint[x]] == 3 * columns[Global::constraint[x + 1]] ||
                     columns[Global::constraint[x + 1]] == 3 * columns[x])) {
+            return std::make_tuple(true, Global::constraint[x], Global::constraint[x + 1]);
+        } else if (columns[Global::constraint[x]] > columns[Global::constraint[x + 1]] &&
+                   columns[Global::constraint[x]] - columns[Global::constraint[x + 1]] ==
+                   columns[Func::findOther(Global::constraint[x + 1], Global::constraint[x])]) {
+            return std::make_tuple(true, Global::constraint[x], Global::constraint[x + 1]);
+        } else if (columns[Global::constraint[x + 1]] > columns[Global::constraint[x]] &&
+                   columns[Global::constraint[x + 1]] - columns[Global::constraint[x]] ==
+                   columns[Func::findOther(Global::constraint[x], Global::constraint[x + 1])]) {
             return std::make_tuple(true, Global::constraint[x], Global::constraint[x + 1]);
         }
     }

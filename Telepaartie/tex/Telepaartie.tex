@@ -2,6 +2,7 @@
 \usepackage{graphicx}
 \usepackage{listings}
 \usepackage{amsmath}
+\usepackage{amssymb}
 
 %\graphicspath{ {../resources/} }
 
@@ -12,21 +13,20 @@
 
 \maketitle
 
-\section{Ideen des Algorithmus}
+\section*{Ideen des Algorithmus}
 
 \subsection*{ Finden der LLL}
 
-Eine LLL kann nur entstehen wenn dafor zwei Spalten die gleiche anzahl Objekte beinhalten(a,b,c \dots Spalten) \( a = b\) Somit würde auch gleich einen Schritt zufor gelten z.B 
+Eine LLL kann nur entstehen wenn dafor zwei Spalten die gleiche anzahl Objekte beinhalten(a,b,c \dots Spalten) \( a = b\) Somit würde auch gleich einen Schritt zu vor gelten z.B 
 \begin{equation}
 	((2a = b \wedge a < c)  \oplus (2b = a \wedge b < c)) \oplus ((3a = b)  \oplus (3b = a))
 \end{equation}
 
-Mit diesem Wissen können wir Mögliche LLLs zwei Schichten vorraus sagen. Zudem möchte ich noch kurz darauf aufmerksam machen das \(a>c\) oder \(b > c\) bei  \( \leq \) würde Regel 1.) greifen. Diese Aufgestellten beobachtungen helfen uns nun die Zu untersuchenden Möglichkeite um zwei Schichten immer zu reduzieren.
+Mit diesem Wissen können wir mögliche LLLs zwei Schichten voraussagen. Zudem möchte ich noch kurz darauf aufmerksam machen das \(a>c\) oder \(b > c\) bei. \( \leq \) würde Regel 1.) greifen. Diese aufgestellten Beobachtungen helfen uns nun die zu untersuchenden Möglichkeit, um zwei Schichten immer zu reduzieren.
 
 \subsection*{ Darstellung als Baum}
 
-Die einzig wirklich Sinnvolle Datenstrukturelle darstellung ist als Baum. Der folgende Eigenschaften besitzt.
-\newline
+Die einzig wirklich sinnvolle datenstrukturelle Darstellung ist als Baum. Der folgende Eigenschaften besitzt: \newline
 
 \(max_c\)\dots 				Maximale Anzahl Kinder und Kanten die ein Knoten hatt. \newline
 \(collumns\)\dots 			Anzahl Spalten ( Boxen ) \newline
@@ -37,7 +37,7 @@ Die einzig wirklich Sinnvolle Datenstrukturelle darstellung ist als Baum. Der fo
 	max_c =  \sum \limits_{i=0}^N  i
 \end{equation}
 
-Das sind natürlich nur worst case betrachtungen und mit intelligentem z.B Ausschließen von Doppelten lässt sich die gesamt anzahl Knoten stark minimieren. Somit ergibt sich für Anzahl der Knoten im gesamten Baum die Funktion: \newline
+Das sind natürlich nur Worst Case Betrachtungen und mit intelligentem z.B Ausschließen von Doppelten lässt sich die gesamt Anzahl Knoten stark minimieren. Somit ergibt sich für Anzahl der Knoten im gesamten Baum die Funktion: \newline
 
 \begin{equation}
 	max_k =  \sum \limits_{i=1}^N  (max_c ^ i)
@@ -47,12 +47,10 @@ Wie schon im ersten Abschnitt angesprochen können wir das N um zwei Reduzieren 
 
 \subsection*{ Suchen }
 
-Auch wenn die Datenstruktur "Baum" immer sehr einladend ist rekursiv zu Arbeiten (Suchen) ist sie für unseren fall hier äußerst ungeignet da wir damit sehr viele ungenutzte Knoten erzeugen was sehr unperformant ist. Weswegen wir alle Kinder aller Knoten einer Schicht erzeugen lassen und diese dann dann abprüfen ob sie die Kriterien in 1.) erfüllen. Damit erhältman ein bessere Average performance.
 
+Auch wenn die Datenstruktur "Baum" immer sehr einladend ist rekursiv zu arbeiten (Suchen) ist sie für unseren Fall hier äußerst ungeeignet da wir damit sehr viele ungenutzte Knoten erzeugen, was sehr unperformant ist. Weswegen wir alle Kinder aller Knoten einer Schicht erzeugen lassen und diese dann abprüfen ob sie die Kriterien in 1.) erfüllen. Damit erhält man ein bessere Average Performance.
 
-\subsection*{ Weitere Beobachtungen der Aufgabe }
-
-\subsection*{ Formaler Ausdruck }
+\subsection*{ Rückwerts }
 
 
 \begin{gather}
@@ -63,33 +61,41 @@ Auch wenn die Datenstruktur "Baum" immer sehr einladend ist rekursiv zu Arbeiten
     \end{cases}
 \end{gather}
 
-f is not fully periodical there a sometimes pair that come before periodical process starts. \newline
+So können wir die Umkehrfunktion bilden:
 
-\(A_n\)\dots all possible Tuples (Pairs)
+\begin{gather}
+   	f^{-1}(x, y) =  
+    \begin{cases}
+    	(x + \frac{y}{2},  \frac{y}{2})		\quad x > y \wedge 0 \equiv y (mod 2) \\
+    	(\frac{x}{2},y + \frac{x}{2})		\quad y > x\wedge 0 \equiv x (mod 2) \\
+    	(\frac{x}{2}, y + \frac{x}{2})		\quad x > y \wedge 0 \equiv x (mod 2) \\
+    	(x + \frac{y}{2}, \frac{y}{2})		\quad y > x\wedge 0 \equiv y (mod 2) \\
+    \end{cases}
+\end{gather}
+
+Es fällt auf das die Funktion f(x, y) nicht eineindeutig ist ein Beispiel: \(f^{-1}(f(3, 5)) = (1, 7)  \text{or} (3,5) \)
+Weil mehrere Kriterien der Funktion gleichzeitig erfüllt sein können gibt \(f^{-1}(x, y) \) nur ein paar zurück aber in der Implementierung würde darauf geachtet werden.
+
+\subsection*{ Finden des Schwierigstens}
+
+Ich habe dabei einen ähnliches Lösungsverfahren verwendet wie bei 1.) mit einem Baum wobei ich zuerst alle Paare gebildet habe:
+
+N \dots Number of Items
+
 \begin{equation}
-	A_n = \lbrace (x, y) \in D \mid f(x, y) \rbrace
+	\forall n \in \mathbb{N}  \wedge 1 < N - n * 2, (n , n , N - n * 2)_n
 \end{equation}
-\begin{equation}
-	A_n \cap A_k :\Longleftrightarrow \lbrace \rbrace \mid k \neq n
-\end{equation}
-%Daraus ergibt sich das jedes mögliche Zahlenpaar genau in einer Menge vorkommt.
-We can conclude that every possible pair is member of exact one set. What happens now when we observe more than just x,y and add c we can this now describe as 3 pairs (x, y), (x, c), (y, c). The sets are staying the same. \newline
 
-We will not introduce a category for sets which include a 0 as one of the two numbers
-\begin{equation}
-	(0, x) \in A_n \vee (x, 0) \in A_n
-\end{equation}
-These sets I will call null terminating.
+Das sind die Wurzeln des Baumes. Nun nehmen wir uns \(f^{-1}\) (5) zurhand und berechnen damit alle Äste (Kinder). Wobei Kinder nicht aufgenommen werden die schon tiefer im Baum existieren deswegen gibt es eine Such-Funktion.
 
-Returning to the original question we are starting searching from all null terminating sets. Lets assume for demonstrational purposes that we have a sum of 9. Means we have four null terminating sequences ((0, 4) 5), ((0, 8),1), ((0, 2),7), ((0, 6),3) for the person woundering why its only 4 because the question requires that we make it hard for the solving algorithm and its impossible for the solving algo. to get too those other results.
-
+Der Baum Generierung Prozess wird abgebrochen, wenn eine der äußeren Äste keine Kinder hatt (\(|childs| =. 0 \)) weil alle schon tiefer im Baum vorkommen diese Node ist dann die Node die zurückgegeben wird und mit der aktuell besten verglichen wird.
 
 \section{ Implementierung }
-Das Programm wurde mit C++ (C11) Implementiert das ist hatt den Vorteil das ich meine Knoten als Objekte und den Parent und die Childs einfach als Pointer Speichern kann. Zudem habe ich den Großen Performance Vorteil als Complalierte Sprache den ich definitiv brauche.
+Das Programm wurde mit C++ (C11) Implementiert das hat den Vorteil das ich meine Knoten als Objekte und den Parent und die Childs einfach als Pointer Speichern kann. Zudem habe ich den Großen Performance Vorteil, als kompilierte Sprache den ich definitiv brauche.
 
 \subsection*{ Zum Laufen Kriegen }
 
-Ich würde sehr dringend raten den gcc (g++) \(\rightarrow\) die GNU Build Essentials zu nutzen. Weil ich nicht dafür Guarntieren kann das es z.B mit VSCODE oder clang geht.
+Ich würde sehr dringend raten den gcc (g++) \(\rightarrow\) die GNU Build Essentials zu nutzen. Weil ich nicht dafür Garantieren kann das es z.B mit VSCODE oder clang geht. Die Cmake beinhaltet zwei Targets wobei Telepaartie\_1 die erste Teilaufgabe ist und Telepaartie\_2 die zweite. Ich habe mich für 2 Programme entschieden, um der GNU Philosophie zu folgen.
 
 \begin{lstlisting}[language=Bash]
 	
@@ -99,13 +105,15 @@ Ich würde sehr dringend raten den gcc (g++) \(\rightarrow\) die GNU Build Essen
 	
 	$ make
 	
-	$ ./Telepaartie 2 4 7
+	$ ./Telepaartie_1 2 4 7
+	
+	$./Telepaartie_2 63
 
 \end{lstlisting}
 
 \subsection*{ Der Baum }
-
-Die Knoten werden bei mir im Code durch die Klasse `TreeNode` repräsentiert. Sie speichert die aktuelle Configuration sowie den Parent und alle ihre Nachkommen. Zudem bietet die Klasse auch die oben besprochenen Methoden an sowas wie check (verweiß auf 1.1) oder generieren neuen nachkommen.
+clea
+Die Knoten meines Programmes haben eine sind zwei Klassen TreeNodeForward und TreeNodeBackward die als Interface Klasse TreeNode besitzt durch zeitliche Schwierigkeiten konnte ich keine schöne klassenhierarchie aufbauen weswegen es auch so viel redundanten Code gibt den man in TreeNode einlagern hätte können. 
 
 
 \end{document}
