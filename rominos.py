@@ -1,4 +1,5 @@
 ﻿import argparse
+import tkinter
 
 class Romino:
     def __init__(self, coords):
@@ -63,7 +64,7 @@ class Romino:
         rominos = []
         for free_coord in self.get_free_border_coords():
             romino = self.coords.union((free_coord, ))              # add free coord to self
-            if self.__is_romino(romino):
+            if self.__is_romino(romino):                            # check if new object is still a Romino
                 rominos.append(romino)
         return rominos
 
@@ -87,29 +88,38 @@ class Romino:
                         return True                                                                         # at least 1 pair is existing
         return False                                                                                        # no pair was found
 
-    def draw(self):                                                 # draw romino (currently ASCII style)
-        grid = {}
-        for x, y in self.coords:
-            if y not in grid:                                       # expand grid
-               grid[y] = []
-            if x > len(grid[y]):                                    # expand list
-                for i in range(len(grid[y]), x):
-                    grid[y].append("_")                             # fill empty space
-            grid[y][x - 1] = "#"
-        for row in sorted(grid.keys(), reverse=True):               # print every row starting with highest y
-            for char in grid[row]:
-                print(char, end="")
-            print()                                                 # new line
+    def draw(self, canvas, x, y):                                   # draw romino on Canvas, 0|0 at x|y
+        pass
+        # TODO
 
+
+def get_dimensions(n, romino_count, width, height):                 # claculate Height and Width available for each Romino, Rominos per Row, Rows and height of Scrollbar
+    return None, None, None, None, None
+    # TODO
+
+def get_window(width, height, scroll_height):                       # get Tk window with vertical Scrollbar
+    window = tkinter.Tk()
+    window.title("BWINF Rominos")
+    frame = tkinter.Frame(window, width=width, height=height)
+    frame.grid(row=0, column=0)
+    canvas = tkinter.Canvas(frame, width=width, height=height, scrollregion=(0, 0, width, scroll_height))
+    vsbar = tkinter.Scrollbar(frame, orient=tkinter.VERTICAL)
+    vsbar.pack(side=tkinter.RIGHT, fill=tkinter.Y)
+    vsbar.config(command=canvas.yview)
+    canvas.config(yscrollcommand=vsbar.set)
+    canvas.pack(side=tkinter.LEFT, expand=True, fill=tkinter.BOTH)
+    return window, canvas
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Program to calculate and display Rominos")
     parser.add_argument("n", type=int, help="Number of Squares in Rominos")
     parser.add_argument("--draw", help="Draw Rominos" , action="store_true")
     parser.add_argument("--show-steps", help="Show number for every generated n", action="store_true")
+    parser.add_argument("--resolution", type=str, help="Width and Height seperated with an x (default is 1024×768)", default="1024×768")
     args = parser.parse_args()
 
     rominos = set((Romino(((0, 0), (1, 1))), ))
+
     if args.n >= 2:
         for i in range(2, args.n):                                  # Determine number recursively
             print("Generating Rominos for n = %s" % (i + 1))
@@ -121,10 +131,16 @@ if __name__ == "__main__":
                 print("Length: %s" % len(new_rominos))
             rominos = new_rominos
         print("============= Result =============")
-        if args.draw:                                               # skip drawing if false
-            for romino in rominos:
-                print()                                             # add newline for better Overview
-                romino.draw()
         print("Rominos: %s" % len(rominos))
+
+        if args.draw:                                               # skip drawing if false
+            width, height = tuple(int(i) for i in args.resolution.split("x"))   # convert to int
+            romino_width, romino_height, per_row, rows, scroll_height = get_dimensions(args.n, len(rominos), width, height)
+            window, canvas = get_window(width, height, scroll_height)
+            for romino in rominos:
+                pass
+                # TODO
+            window.mainloop()                                       # wait for user to close the window
+
     else:
         print("There are no Rominos for n < 2")                     # Rominos have to contain a Romino-pair, wich is consisting of at least 2 squares
