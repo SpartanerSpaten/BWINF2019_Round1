@@ -115,7 +115,7 @@ if __name__ == "__main__":
     parser.add_argument("n", type=int, help="Number of Squares in Rominos")
     parser.add_argument("--draw", help="Draw Rominos" , action="store_true")
     parser.add_argument("--show-steps", help="Show number for every generated n", action="store_true")
-    parser.add_argument("--resolution", type=str, help="Width and Height seperated with an x (default is 1024×768)", default="1024×768")
+    parser.add_argument("--resolution", type=str, help="Width and Height seperated with an x (default is 1024x768)", default="1024x768")
     args = parser.parse_args()
 
     rominos = set((Romino(((0, 0), (1, 1))), ))
