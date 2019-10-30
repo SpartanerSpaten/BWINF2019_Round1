@@ -1,5 +1,6 @@
 ﻿import argparse
 import tkinter
+import math
 
 class Romino:
     def __init__(self, coords):
@@ -93,9 +94,11 @@ class Romino:
         # TODO
 
 
-def get_dimensions(n, romino_count, width, height):                 # claculate Height and Width available for each Romino, Rominos per Row, Rows and height of Scrollbar
-    return None, None, None, None, None
-    # TODO
+def get_dimensions(n, romino_count, width, height):                 # claculate Width (is also height) available for each Romino, Rominos per Row, Rows and height of Scrollbar
+    r_width = n * 10 + 10                                           # 10 per Square, 10 as border to next Romino
+    per_row = int(width / r_width)                                  # using int because Rominos cant be split
+    rows = math.ceil(romino_count / per_row)                        # round up if last row cant be filled completely
+    return r_width, r_width, per_row, rows, rows * r_width 
 
 def get_window(width, height, scroll_height):                       # get Tk window with vertical Scrollbar
     window = tkinter.Tk()
