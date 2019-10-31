@@ -2,6 +2,9 @@
 import tkinter
 import math
 
+v_count = 0
+n_count = 0
+
 class Romino:
     def __init__(self, coords):
         self.coords = self.__normalise(coords)
@@ -16,24 +19,26 @@ class Romino:
             raise NotImplementedError
     
     def __normalise(self, coords):                                  # move romino to touch x and y axis
-	    smallest_x = None
-	    smallest_y = None
-	    for x, y in coords:
-	    	if smallest_x == None or x < smallest_x:
-	    		smallest_x = x
-	    	if smallest_y == None or y < smallest_y:
-	    		smallest_y = y
-	    div_x = 1 - smallest_x
-	    div_y = 1 - smallest_y
-	    if not (div_x == 0 and div_y == 0):							# needs adjustment
-	    	new_coords = []
-	    	for x, y in coords:
-	    		new_coords.append((x + div_x, y + div_y))
-	    	return frozenset(new_coords)
-	    else:
-	    	return frozenset(coords)
+        global n_count
+        n_count += 1
+        smallest_x = None                                           # to support set which has no indexing
+        smallest_y = None
+        for x, y in coords:                                         # get smallest x and y
+            if smallest_x == None or x < smallest_x:
+                smallest_x = x
+            if smallest_y == None or y < smallest_y:
+                smallest_y = y
+        div_x = 1 - smallest_x
+        div_y = 1 - smallest_y
+        if not (div_x == 0 and div_y == 0):							# needs adjustment
+            new_coords = frozenset((x + div_x, y + div_y) for x, y in coords)   # adjust every coord
+            return new_coords
+        else:
+            return frozenset(coords)
 
     def get_variants(self):                                         # get all twisted and mirrored variants, including normal version
+        global v_count
+        v_count += 1
         variants = []
         for twist in self.__get_twists(self.coords):
             variants.append(self.__normalise(twist))
@@ -89,14 +94,16 @@ class Romino:
                         return True                                                                         # at least 1 pair is existing
         return False                                                                                        # no pair was found
 
-    def draw(self, canvas, x, y):                                   # draw romino on Canvas, 0|0 at x|y
-        pass
-        # TODO
+    def draw(self, canvas, pre_x, pre_y):                                   # draw romino on Canvas, 0|0 at pre_x|pre_y
+        for x, y in self.coords:                                            # because of axis position in tkinter, romino will be mirrored
+            canvas.create_rectangle(x*10 + pre_x, y*10 + pre_y, x*10 + pre_x + 10, y*10 + pre_y + 10, fill="red") # draw 10x10 square
 
 
 def get_dimensions(n, romino_count, width, height):                 # claculate Width (is also height) available for each Romino, Rominos per Row, Rows and height of Scrollbar
     r_width = n * 10 + 10                                           # 10 per Square, 10 as border to next Romino
     per_row = int(width / r_width)                                  # using int because Rominos cant be split
+    if per_row == 0:                                                # window width too small for one romino
+        raise ValueError("Window width is too small, has to be at least %s" % r_width)
     rows = math.ceil(romino_count / per_row)                        # round up if last row cant be filled completely
     return r_width, r_width, per_row, rows, rows * r_width 
 
@@ -140,10 +147,22 @@ if __name__ == "__main__":
             width, height = tuple(int(i) for i in args.resolution.split("x"))   # convert to int
             romino_width, romino_height, per_row, rows, scroll_height = get_dimensions(args.n, len(rominos), width, height)
             window, canvas = get_window(width, height, scroll_height)
+            current_per_row = 0
+            pre_x = 0                                               # to prevent rominos from drawing over each other
+            pre_y = 0
             for romino in rominos:
-                pass
-                # TODO
+                if current_per_row == per_row:                      # new row
+                    pre_y += romino_height
+                    current_per_row = 0                             # reset
+                    pre_x = 0
+                romino.draw(canvas, pre_x, pre_y)
+                pre_x += romino_width
+                current_per_row += 1
+                
+                
             window.mainloop()                                       # wait for user to close the window
 
     else:
         print("There are no Rominos for n < 2")                     # Rominos have to contain a Romino-pair, wich is consisting of at least 2 squares
+
+print(v_count, n_count)
