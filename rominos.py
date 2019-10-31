@@ -2,8 +2,6 @@
 import tkinter
 import math
 
-v_count = 0
-n_count = 0
 
 class Romino:
     def __init__(self, coords):
@@ -19,8 +17,6 @@ class Romino:
             raise NotImplementedError
     
     def __normalise(self, coords):                                  # move romino to touch x and y axis
-        global n_count
-        n_count += 1
         smallest_x = None                                           # to support set which has no indexing
         smallest_y = None
         for x, y in coords:                                         # get smallest x and y
@@ -37,8 +33,6 @@ class Romino:
             return frozenset(coords)
 
     def get_variants(self):                                         # get all twisted and mirrored variants, including normal version
-        global v_count
-        v_count += 1
         variants = []
         for twist in self.__get_twists(self.coords):
             variants.append(self.__normalise(twist))
@@ -108,19 +102,19 @@ def get_dimensions(n, romino_count, width, height):                 # claculate 
     return r_width, r_width, per_row, rows, rows * r_width 
 
 def get_window(width, height, scroll_height):                       # get Tk window with vertical Scrollbar
-    window = tkinter.Tk()
-    window.title("BWINF Rominos")
-    frame = tkinter.Frame(window, width=width, height=height)
+    window = tkinter.Tk()                                           # get window
+    window.title("BWINF Rominos")                                   # set name
+    frame = tkinter.Frame(window, width=width, height=height)       # frame for canvas
     frame.grid(row=0, column=0)
-    canvas = tkinter.Canvas(frame, width=width, height=height, scrollregion=(0, 0, width, scroll_height))
+    canvas = tkinter.Canvas(frame, width=width, height=height, scrollregion=(0, 0, width, scroll_height))   # canvas with scrollregion
     vsbar = tkinter.Scrollbar(frame, orient=tkinter.VERTICAL)
-    vsbar.pack(side=tkinter.RIGHT, fill=tkinter.Y)
-    vsbar.config(command=canvas.yview)
+    vsbar.pack(side=tkinter.RIGHT, fill=tkinter.Y)                  # pack to right side
+    vsbar.config(command=canvas.yview)                              # connect scrollbar with canvas
     canvas.config(yscrollcommand=vsbar.set)
     canvas.pack(side=tkinter.LEFT, expand=True, fill=tkinter.BOTH)
     return window, canvas
 
-if __name__ == "__main__":
+if __name__ == "__main__":                                          # run programm
     parser = argparse.ArgumentParser(description="Program to calculate and display Rominos")
     parser.add_argument("n", type=int, help="Number of Squares in Rominos")
     parser.add_argument("--draw", help="Draw Rominos" , action="store_true")
@@ -128,7 +122,7 @@ if __name__ == "__main__":
     parser.add_argument("--resolution", type=str, help="Width and Height seperated with an x (default is 1024x768)", default="1024x768")
     args = parser.parse_args()
 
-    rominos = set((Romino(((0, 0), (1, 1))), ))
+    rominos = set((Romino(((0, 0), (1, 1))), ))                     # minimal romino, used for generating n > 2 rominos
 
     if args.n >= 2:
         for i in range(2, args.n):                                  # Determine number recursively
@@ -137,7 +131,7 @@ if __name__ == "__main__":
             for romino in rominos:
                 for upgraded_romino in romino.upgrade():
                     new_rominos.add(Romino(upgraded_romino))
-            if args.show_steps:
+            if args.show_steps:                                     # print romino count for current n
                 print("Length: %s" % len(new_rominos))
             rominos = new_rominos
         print("============= Result =============")
@@ -157,12 +151,8 @@ if __name__ == "__main__":
                     pre_x = 0
                 romino.draw(canvas, pre_x, pre_y)
                 pre_x += romino_width
-                current_per_row += 1
-                
-                
+                current_per_row += 1  
             window.mainloop()                                       # wait for user to close the window
 
     else:
         print("There are no Rominos for n < 2")                     # Rominos have to contain a Romino-pair, wich is consisting of at least 2 squares
-
-print(v_count, n_count)
