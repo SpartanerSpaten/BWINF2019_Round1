@@ -88,10 +88,18 @@ class Romino:
                         return True                                                                         # at least 1 pair is existing
         return False                                                                                        # no pair was found
 
-    def draw(self, canvas, pre_x, pre_y):                                   # draw romino on Canvas, 0|0 at pre_x|pre_y
-        for x, y in self.coords:                                            # because of axis position in tkinter, romino will be mirrored
+    def draw(self, canvas, pre_x, pre_y):                           # draw romino on Canvas, 0|0 at pre_x|pre_y
+        for x, y in self.coords:                                    # because of axis position in tkinter, romino will be mirrored
             canvas.create_rectangle(x*10 + pre_x, y*10 + pre_y, x*10 + pre_x + 10, y*10 + pre_y + 10, fill="red") # draw 10x10 square
 
+
+def get_int(question):												# get integer from user
+    while True:
+        answer = input(question)
+        if answer.isdecimal():
+            return int(answer)
+        else:														# ask again
+            print("Please enter a valid number!")
 
 def get_dimensions(n, romino_count, width, height):                 # claculate Width (is also height) available for each Romino, Rominos per Row, Rows and height of Scrollbar
     r_width = n * 10 + 10                                           # 10 per Square, 10 as border to next Romino
@@ -114,26 +122,52 @@ def get_window(width, height, scroll_height):                       # get Tk win
     canvas.pack(side=tkinter.LEFT, expand=True, fill=tkinter.BOTH)
     return window, canvas
 
+def generate_rominos_recur(n, show_steps=False):					# determine rominos recursively
+    if n == 2:														# end condition
+        return set((Romino(((0, 0), (1, 1))), ))                    # minimal romino, used for generating n > 2 rominos
+    else:
+        rominos = generate_rominos_recur(n - 1, show_steps=show_steps)	# upgrade n - 1 rominos to n rominos
+        upgraded_rominos = set()
+        print("Generating Rominos for n = %s" % (n))
+        for romino in rominos:
+            for upgraded_romino in romino.upgrade():
+                upgraded_rominos.add(Romino(upgraded_romino))
+        if show_steps:
+            print("Rominos: %s" % len(upgraded_rominos))
+        return upgraded_rominos
+	
+def generate_rominos_iter(n, show_steps=False):						# determine rominos iteratively
+    rominos = set((Romino(((0, 0), (1, 1))), ))                     # minimal romino, used for generating n > 2 rominos
+    for i in range(2, args.n):
+        print("Generating Rominos for n = %s" % (i + 1))
+        new_rominos = set()
+        for romino in rominos:
+            for upgraded_romino in romino.upgrade():
+                new_rominos.add(Romino(upgraded_romino))
+        if show_steps:                                              # print romino count for current n
+            print("Rominos: %s" % len(new_rominos))
+        rominos = new_rominos
+    return rominos
+
 if __name__ == "__main__":                                          # run programm
     parser = argparse.ArgumentParser(description="Program to calculate and display Rominos")
-    parser.add_argument("n", type=int, help="Number of Squares in Rominos")
+    parser.add_argument("--n", type=int, help="Number of Squares in Rominos", default=None)
+    parser.add_argument("--method", type=str, help="Method for generating Rominos, iter or recur (Default)", default="recur")
     parser.add_argument("--draw", help="Draw Rominos" , action="store_true")
     parser.add_argument("--show-steps", help="Show number for every generated n", action="store_true")
     parser.add_argument("--resolution", type=str, help="Width and Height seperated with an x (default is 1024x768)", default="1024x768")
     args = parser.parse_args()
 
-    rominos = set((Romino(((0, 0), (1, 1))), ))                     # minimal romino, used for generating n > 2 rominos
+    if args.n is None:												# ask for it
+	    args.n = get_int("Value of n? ")
 
     if args.n >= 2:
-        for i in range(2, args.n):                                  # Determine number recursively
-            print("Generating Rominos for n = %s" % (i + 1))
-            new_rominos = set()
-            for romino in rominos:
-                for upgraded_romino in romino.upgrade():
-                    new_rominos.add(Romino(upgraded_romino))
-            if args.show_steps:                                     # print romino count for current n
-                print("Length: %s" % len(new_rominos))
-            rominos = new_rominos
+        if args.method == "iter":
+            rominos = generate_rominos_iter(args.n, show_steps=args.show_steps)
+        elif args.method == "recur":			
+            rominos = generate_rominos_recur(args.n, show_steps=args.show_steps)
+        else:
+            raise ValueError("Unknown Method '%s'" % args.method)
         print("============= Result =============")
         print("Rominos: %s" % len(rominos))
 
