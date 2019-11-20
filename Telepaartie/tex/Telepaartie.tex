@@ -17,40 +17,36 @@
 
 \subsection*{ Finden der LLL}
 
-Eine LLL kann nur entstehen wenn dafor zwei Spalten die gleiche anzahl Objekte beinhalten(a,b,c \dots Spalten) \( a = b\) Somit würde auch gleich einen Schritt zu vor gelten z.B 
+Eine LLL kann nur entstehen, wenn davor zwei Spalten die gleiche Anzahl Objekte beinhalten(a,b,c \dots Spalten) \( a = b\). Somit würde auch gleich einen Schritt zuvor gelten z.B. 
 \begin{equation}
 	((2a = b \wedge a < c)  \oplus (2b = a \wedge b < c)) \oplus ((3a = b)  \oplus (3b = a))
 \end{equation}
 
-Mit diesem Wissen können wir mögliche LLLs zwei Schichten voraussagen. Zudem möchte ich noch kurz darauf aufmerksam machen das \(a>c\) oder \(b > c\) bei. \( \leq \) würde Regel 1.) greifen. Diese aufgestellten Beobachtungen helfen uns nun die zu untersuchenden Möglichkeit, um zwei Schichten immer zu reduzieren.
+Mit diesem Wissen können wir mögliche LLLs zwei Schichten voraussagen. Zudem möchte ich noch kurz darauf aufmerksam machen, dass \(a>c\) oder \(b > c\) bei \( \leq \) würde Regel (1) greifen. Diese aufgestellten Beobachtungen helfen uns immer, die zu untersuchende Möglichkeit um zwei Schichten zu reduzieren.
 
 \subsection*{ Darstellung als Baum}
 
-Die einzig wirklich sinnvolle datenstrukturelle Darstellung ist als Baum. Der folgende Eigenschaften besitzt: \newline
+Die einzig wirklich sinnvolle datenstrukturelle Darstellung ist als Baum, der folgende Eigenschaften besitzt: \newline
 
-\(max_c\)\dots 				Maximale Anzahl Kinder und Kanten die ein Knoten hatt. \newline
-\(collumns\)\dots 			Anzahl Spalten ( Boxen ) \newline
-\(max_k\)\dots				Maximale anzahl an Knoten.  \newline
-\(N\)\dots    					Anzahl der Schichten bis LLL gefunden wird
-
-\begin{equation}
-	max_c =  \sum \limits_{i=0}^N  i
-\end{equation}
-
-Das sind natürlich nur Worst Case Betrachtungen und mit intelligentem z.B Ausschließen von Doppelten lässt sich die gesamt Anzahl Knoten stark minimieren. Somit ergibt sich für Anzahl der Knoten im gesamten Baum die Funktion: \newline
+\begin{itemize}
+	\item \(max_c\)\dots 				Maximale Anzahl Kinder und Kanten die ein Knoten hat.
+	\item \(max_k\)\dots				Maximale Anzahl an Knoten. 
+	\item \(N\)\dots    					Anzahl der Schichten bis zur ersten LLL
+\end{itemize}
 
 \begin{equation}
-	max_k =  \sum \limits_{i=1}^N  (max_c ^ i)
+	max_k = \sum \limits_{i=1}^{N-2}(  3i) + 1
 \end{equation}
 
-Wie schon im ersten Abschnitt angesprochen können wir das N um zwei Reduzieren weil wir schon nach den Kanten suchen die diese Eigenschaften erfüllen und somit auf Garantie zur LLL führen.
+Das sind natürlich nur Worst-Case-Betrachtungen und mit intelligenten Aussortierungsvefahren, z.B dem Ausschließen von Doppelten, lässt sich die Gesamtanzahl der Knoten stark minimieren. \newline
+
+Wie schon im ersten Abschnitt angesprochen, können wir die Anzahl der Schichten um zwei reduzieren, weil wir schon nach den Kanten suchen die diese Eigenschaften (1) erfüllen und somit garantiert zur LLL führen.
 
 \subsection*{ Suchen }
 
+Auch wenn die Datenstruktur "Baum" immer sehr einladend ist rekursiv zu arbeiten (Suchen), ist sie für unseren Fall hier äußerst ungeeignet, da wir damit sehr viele ungenutzte Knoten erzeugen, was sehr unperformant ist. Deswegen lassen wir alle Kinder aller Knoten eine Schicht erzeugen und diese dann abprüfen, ob sie die Kriterien (1) erfüllen. Damit erhält man eine bessere Average Performance.
 
-Auch wenn die Datenstruktur "Baum" immer sehr einladend ist rekursiv zu arbeiten (Suchen) ist sie für unseren Fall hier äußerst ungeeignet da wir damit sehr viele ungenutzte Knoten erzeugen, was sehr unperformant ist. Weswegen wir alle Kinder aller Knoten einer Schicht erzeugen lassen und diese dann abprüfen ob sie die Kriterien in 1.) erfüllen. Damit erhält man ein bessere Average Performance.
-
-\subsection*{ Rückwerts }
+\subsection*{ Rückwärts }
 
 
 \begin{gather}
@@ -73,29 +69,29 @@ So können wir die Umkehrfunktion bilden:
     \end{cases}
 \end{gather}
 
-Es fällt auf das die Funktion f(x, y) nicht eineindeutig ist ein Beispiel: \(f^{-1}(f(3, 5)) = (1, 7)  \text{or} (3,5) \)
-Weil mehrere Kriterien der Funktion gleichzeitig erfüllt sein können gibt \(f^{-1}(x, y) \) nur ein paar zurück aber in der Implementierung würde darauf geachtet werden.
+Es fällt auf, dass die Funktion f(x, y) nicht bijektiv ist. Hier ein Beispiel dafür: \(f^{-1}(f(3, 5)) = (1, 7)  \text{or} (3,5) \)
+Weil mehrere Kriterien der Funktion gleichzeitig erfüllt sein können, gibt \(f^{-1}(x, y) \) nur ein Tupel zurück, aber in der Implementierung würde darauf geachtet werden.
 
-\subsection*{ Finden des Schwierigstens}
+\subsection*{ Finden des Schwierigsten}
 
-Ich habe dabei einen ähnliches Lösungsverfahren verwendet wie bei 1.) mit einem Baum wobei ich zuerst alle Paare gebildet habe:
+Ich habe dabei ein ähnliches Lösungsverfahren verwendet wie bei der ersten Teilaufgabe mit einem Baum, wobei ich zuerst alle Tubel gebildet habe:
 
 N \dots Number of Items
 
 \begin{equation}
-	\forall n \in \mathbb{N}  \wedge 1 < N - n * 2, (n , n , N - n * 2)_n
+	\forall n \in \mathbb{N}  \wedge 1 \leq N - n * 2, (n , n , N - n * 2)_n
 \end{equation}
 
-Das sind die Wurzeln des Baumes. Nun nehmen wir uns \(f^{-1}\) (5) zurhand und berechnen damit alle Äste (Kinder). Wobei Kinder nicht aufgenommen werden die schon tiefer im Baum existieren deswegen gibt es eine Such-Funktion.
+Das sind die Wurzeln des Baumes. Nun nehmen wir uns \(f^{-1}\) (5) zur Hand und berechnen damit alle Äste (Kinder). Wobei Kinder nicht aufgenommen werden, die schon tiefer im Baum existieren. Deswegen gibt es eine Suchfunktion.
 
-Der Baum Generierung Prozess wird abgebrochen, wenn eine der äußeren Äste keine Kinder hatt (\(|childs| =. 0 \)) weil alle schon tiefer im Baum vorkommen diese Node ist dann die Node die zurückgegeben wird und mit der aktuell besten verglichen wird.
+Der Baum-Generierungs-Prozess wird abgebrochen, wenn einer der äußeren Äste keine Kinder hat (\(|childs| =. 0 \)) weil alle schon tiefer im Baum vorkommen. Dieser Knoten ist dann der Knoten, der zurückgegeben wird und mit dem aktuell Besten verglichen wird.
 
-\section{ Implementierung }
-Das Programm wurde mit C++ (C11) Implementiert das hat den Vorteil das ich meine Knoten als Objekte und den Parent und die Childs einfach als Pointer Speichern kann. Zudem habe ich den Großen Performance Vorteil, als kompilierte Sprache den ich definitiv brauche.
+\section*{ Implementierung }
+Das Programm wurde mit C++ implementiert. Das hat den Vorteil, dass ich meine Knoten als Objekte und den Parent und die Kinder einfach als Pointer speichern kann. Zudem habe ich den großen Performance-Vorteil, als kompilierte Sprache, den ich definitiv brauche.
 
-\subsection*{ Zum Laufen Kriegen }
+\subsection*{ Zum Laufen bringen }
 
-Ich würde sehr dringend raten den gcc (g++) \(\rightarrow\) die GNU Build Essentials zu nutzen. Weil ich nicht dafür Garantieren kann das es z.B mit VSCODE oder clang geht. Die Cmake beinhaltet zwei Targets wobei Telepaartie\_1 die erste Teilaufgabe ist und Telepaartie\_2 die zweite. Ich habe mich für 2 Programme entschieden, um der GNU Philosophie zu folgen.
+Ich würde sehr dringend raten, den gcc (g++) \(\rightarrow\) die GNU Build Essentials zu nutzen, weil ich nicht dafür garantieren kann, dass es z.B mit VSCODE oder Clang geht. Die Cmake beinhaltet zwei Targets, wobei Telepaartie\_1 die erste Teilaufgabe ist und Telepaartie\_2 die zweite. Ich habe mich für 2 Programme entschieden, um der GNU Philosophie zu folgen.
 
 \begin{lstlisting}[language=Bash]
 	
@@ -112,8 +108,29 @@ Ich würde sehr dringend raten den gcc (g++) \(\rightarrow\) die GNU Build Essen
 \end{lstlisting}
 
 \subsection*{ Der Baum }
-clea
-Die Knoten meines Programmes haben eine sind zwei Klassen TreeNodeForward und TreeNodeBackward die als Interface Klasse TreeNode besitzt durch zeitliche Schwierigkeiten konnte ich keine schöne klassenhierarchie aufbauen weswegen es auch so viel redundanten Code gibt den man in TreeNode einlagern hätte können. 
+
+Die Knoten meines Programmes haben sind in zwei Klassen aufgeteilt. Die Klasse TreeNodeForward für die erste Teilaufgabe und TreeNodeBackwards für die zweite Teilaufgabe. Ich hatte versucht mit einer Interfaceklasse ein wenig Ordnung alles ein wenig zu ordnen hatte aber eher dazu geführt das ich nun mehr Redundaten code habe. Zudem wurde das Auslesen  schlecter Knoten bei der zweiten Teilaufgabe mit der Zeit immer Komplexer weswegen es z.B auch funktionen wie `search` oder `advancedMove` notwenig wurden.
+
+\subsection*{ Beispiel Runs}
+
+In der Ordner resources sind Screenshots von exemplarischen Runs.
+
+\subsection*{ Weitere Optimierungen}
+
+Dadurch das wir wirklich überprüfen was das beste ist mit der Distance Funtkion könnten wir alle in diesem Baum vorkommenden Knoten die unter unserem Input vorkommen aus der Liste der zu überprüfenden rausstreichen. 
+
+\newpage
+
+\begin{itemize}
+	\item \( K  \) \dots Menge aller vorkommen Knoten in einer Überprüfung ( in dem erstelltem Baum)
+	\item \( O \) \dots Menge aller noch zu überprüfenden Werte
+\end{itemize}
+
+\begin{equation}
+	O \setminus K
+\end{equation}
+
+Das hätte den Effekt das die Liste der Elemente wo wir noch die Distance ermitteln müssten sehr schnell kleiner wird.
 
 
 \end{document}

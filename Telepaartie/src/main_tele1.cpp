@@ -73,7 +73,7 @@ int main(int argc, char *argv[]) {
     for (int i = 0; i < 3; i++) {
         temp_string = std::string(argv[i + 1]);
         if (Func::validatesInput(temp_string)) {
-            data.push_back(std::stoi(argv[i + 1]));
+            data.push_back(static_cast<unsigned int &&>(std::stoi(argv[i + 1])));
         }
     }
 
@@ -96,4 +96,4 @@ int main(int argc, char *argv[]) {
     delete head;
 
     return 0;
-};
+}

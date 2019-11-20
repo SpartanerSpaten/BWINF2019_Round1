@@ -35,7 +35,7 @@ public:
         return children[index];
     }
 
-    TreeNode *getParent() {
+    virtual TreeNode *getParent() {
         return parent;
     }
 
@@ -80,7 +80,7 @@ public:
     }
 
 protected:
-    TreeNodeForward *easyTeleport(TreeNodeForward *o, std::vector<unsigned int> &, uint16_t x, uint16_t y);
+    static TreeNodeForward *easyTeleport(TreeNodeForward *o, std::vector<unsigned int> &, uint16_t x, uint16_t y);
 
     std::vector<TreeNodeForward *> children;
     TreeNodeForward *parent;
@@ -95,7 +95,7 @@ class TreeNodeBackward : public TreeNode {
 public:
     TreeNodeBackward();
 
-    TreeNodeBackward(TreeNodeBackward *);
+    explicit TreeNodeBackward(TreeNodeBackward *);
 
     TreeNodeBackward(TreeNodeBackward *, std::vector<unsigned int> &);
 
@@ -104,7 +104,7 @@ public:
 
     void move(unsigned int, unsigned int, bool);
 
-    void move(unsigned int, unsigned int);
+    void move(unsigned int, unsigned int) override;
 
     void generateChildren() override;
 

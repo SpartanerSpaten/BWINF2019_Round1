@@ -42,10 +42,10 @@ std::tuple<unsigned int, unsigned int> Func::func(std::tuple<unsigned int, unsig
 
 std::tuple<unsigned int, unsigned int> Func::revFunc(std::tuple<unsigned int, unsigned int> input) {
     if (std::get<0>(input) > std::get<1>(input)) {
-        return std::make_tuple((unsigned int) (std::get<0>(input) / 2),
-                               (unsigned int) (std::get<1>(input) + std::get<0>(input) / 2));
+        return std::make_tuple(std::get<0>(input) / 2,
+                               std::get<1>(input) + std::get<0>(input) / 2);
     } else {
-        return std::make_tuple((unsigned int) (std::get<1>(input) / 2),
-                               (unsigned int) (std::get<0>(input) + std::get<1>(input) / 2));
+        return std::make_tuple(std::get<1>(input) / 2,
+                               std::get<0>(input) + std::get<1>(input) / 2);
     }
 }

@@ -5,16 +5,15 @@
 #include <iostream>
 
 #include "treenode.hpp"
-#include "set.hpp"
 
 std::vector<std::vector<unsigned int>> generateRoots(int n) {
     unsigned int size = 1;
+    int intSize = 1;
     std::vector<std::vector<unsigned int>> ret;
-    while (n - size * 2 > 1) {
-        if (size % 2 == 0) {
-            ret.push_back({size, size, n - 2 * size});
-        }
+    while (n - intSize * 2 >= 1) {
+        ret.push_back({size, size, (unsigned int) n - 2 * intSize});
         size++;
+        intSize++;
     }
     return ret;
 }
@@ -28,6 +27,10 @@ bool searchVector(std::vector<TreeNodeBackward *> &s, TreeNodeBackward *a) {
     return false;
 }
 
+bool is_number(const std::string &s) {
+    return !s.empty() && std::find_if(s.begin(),
+                                      s.end(), [](char c) { return !std::isdigit(c); }) == s.end();
+}
 
 std::vector<TreeNodeBackward *> sortOut(std::vector<TreeNodeBackward *> &current) {
     std::vector<TreeNodeBackward *> returnVal;
@@ -90,54 +93,84 @@ int main(int argc, char *argv[]) {
         std::cout << "Not enough arguments" << std::endl;
         exit(1);
     }
-
+    if (!is_number(std::string(argv[1]))) {
+        std::cerr << "Given parameter should be a positive number" << std::endl;
+        return 1;
+    }
     int num = std::stoi(argv[1]);
+
+    if (num < 0) {
+        std::cerr << "The number has to be positive" << std::endl;
+        return 1;
+    }
 
     std::vector<std::vector<unsigned int>> data = generateRoots(num);
     TreeNode::init();
-
-    std::tuple<bool, unsigned int, unsigned int> tempWarn;
-
-    std::vector<TreeNodeBackward *> current;
-    std::vector<TreeNodeBackward *> temporaryList;
-    TreeNodeBackward *head;
-    bool done;
-    int record, timeout, counter;
-    record = -10;
     std::vector<unsigned int> best;
-    for (std::vector<unsigned int> startValues : data) {
-        head = new TreeNodeBackward(nullptr, startValues);
-        current.push_back(head);
-        done = false;
-        timeout = 7;
-        counter = 0;
 
-        while (!done && timeout >= 1) {
-            for (TreeNodeBackward *temp : current) {
-                temp->generateChildren();
-                temp->insertChildren(temporaryList);
+    if (num > 5) {
+        std::tuple<bool, unsigned int, unsigned int> tempWarn;
+
+        std::vector<TreeNodeBackward *> current;
+        std::vector<TreeNodeBackward *> temporaryList;
+        TreeNodeBackward *head;
+        int record, timeout, counter;
+        record = -10;
+
+        for (std::vector<unsigned int> startValues : data) {
+            head = new TreeNodeBackward(nullptr, startValues);
+            current.push_back(head);
+            timeout = 7;
+            counter = 0;
+
+            while (timeout >= 1) {
+                for (TreeNodeBackward *temp : current) {
+                    temp->generateChildren();
+                    temp->insertChildren(temporaryList);
+                }
+                if (counter > 2 && num > 10) {
+                    current = sortOut(temporaryList);
+                } else {
+                    current = temporaryList;
+                }
+
+                timeout--;
+                counter++;
             }
-            if (counter > 2 && num > 10) {
-                current = sortOut(temporaryList);
-            } else {
-                current = temporaryList;
+            int d = 0;
+            for (TreeNodeBackward *temp: current) {
+                d = (int) distanceFunction(temp->getColumns());
+                if (d > record) {
+                    best = temp->getColumns();
+                    record = d;
+                }
             }
 
-            timeout--;
-            counter++;
+            delete head;
+            current.clear();
+            temporaryList.clear();
         }
-        int d = 0;
-        for (TreeNodeBackward *temp: current) {
-            d = distanceFunction(temp->getColumns());
-            if (d > record) {
-                best = temp->getColumns();
-                record = d;
-            }
+    } else {
+        switch (num) {
+            case 5:
+                best = {1, 2, 3};
+                break;
+            case 4:
+                best = {1, 1, 2};
+                break;
+            case 3:
+                best = {1, 1, 1};
+                break;
+            case 2:
+                best = {1, 1, 0};
+                break;
+            case 1:
+                best = {1, 0, 0};
+                break;
+            case 0:
+                best = {0, 0, 0};
+                break;
         }
-
-        delete head;
-        current.clear();
-        temporaryList.clear();
     }
 
     for (unsigned int y: best) {
