@@ -1,0 +1,136 @@
+\documentclass{article}
+\usepackage{graphicx}
+\usepackage{listings}
+\usepackage{amsmath}
+\usepackage{amssymb}
+
+%\graphicspath{ {../resources/} }
+
+\begin{document}
+
+\title{Telepaartie}
+\author{Tassilo Tanneberger}
+
+\maketitle
+
+\section*{Ideen des Algorithmus}
+
+\subsection*{ Finden der LLL}
+
+Eine LLL kann nur entstehen, wenn davor zwei Spalten die gleiche Anzahl Objekte beinhalten(a,b,c \dots Spalten) \( a = b\). Somit würde auch gleich einen Schritt zuvor gelten z.B. 
+\begin{equation}
+	((2a = b \wedge a < c)  \oplus (2b = a \wedge b < c)) \oplus ((3a = b)  \oplus (3b = a))
+\end{equation}
+
+Mit diesem Wissen können wir mögliche LLLs zwei Schichten voraussagen. Zudem möchte ich noch kurz darauf aufmerksam machen, dass \(a>c\) oder \(b > c\) bei \( \leq \) würde Regel (1) greifen. Diese aufgestellten Beobachtungen helfen uns immer, die zu untersuchende Möglichkeit um zwei Schichten zu reduzieren.
+
+\subsection*{ Darstellung als Baum}
+
+Die einzig wirklich sinnvolle datenstrukturelle Darstellung ist als Baum, der folgende Eigenschaften besitzt: \newline
+
+\begin{itemize}
+	\item \(max_c\)\dots 				Maximale Anzahl Kinder und Kanten die ein Knoten hat.
+	\item \(max_k\)\dots				Maximale Anzahl an Knoten. 
+	\item \(N\)\dots    					Anzahl der Schichten bis zur ersten LLL
+\end{itemize}
+
+\begin{equation}
+	max_k = \sum \limits_{i=1}^{N-2}(  3i) + 1
+\end{equation}
+
+Das sind natürlich nur Worst-Case-Betrachtungen und mit intelligenten Aussortierungsvefahren, z.B dem Ausschließen von Doppelten, lässt sich die Gesamtanzahl der Knoten stark minimieren. \newline
+
+Wie schon im ersten Abschnitt angesprochen, können wir die Anzahl der Schichten um zwei reduzieren, weil wir schon nach den Kanten suchen die diese Eigenschaften (1) erfüllen und somit garantiert zur LLL führen.
+
+\subsection*{ Suchen }
+
+Auch wenn die Datenstruktur "Baum" immer sehr einladend ist rekursiv zu arbeiten (Suchen), ist sie für unseren Fall hier äußerst ungeeignet, da wir damit sehr viele ungenutzte Knoten erzeugen, was sehr unperformant ist. Deswegen lassen wir alle Kinder aller Knoten eine Schicht erzeugen und diese dann abprüfen, ob sie die Kriterien (1) erfüllen. Damit erhält man eine bessere Average Performance.
+
+\subsection*{ Rückwärts }
+
+
+\begin{gather}
+    f(x, y) =  
+    \begin{cases}
+    	(2x, y - x)		\quad x < y \\
+    	(x - y, 2y) 		\quad y < x
+    \end{cases}
+\end{gather}
+
+So können wir die Umkehrfunktion bilden:
+
+\begin{gather}
+   	f^{-1}(x, y) =  
+    \begin{cases}
+    	(x + \frac{y}{2},  \frac{y}{2})		\quad x > y \wedge 0 \equiv y (mod 2) \\
+    	(\frac{x}{2},y + \frac{x}{2})		\quad y > x\wedge 0 \equiv x (mod 2) \\
+    	(\frac{x}{2}, y + \frac{x}{2})		\quad x > y \wedge 0 \equiv x (mod 2) \\
+    	(x + \frac{y}{2}, \frac{y}{2})		\quad y > x\wedge 0 \equiv y (mod 2) \\
+    \end{cases}
+\end{gather}
+
+Es fällt auf, dass die Funktion f(x, y) nicht bijektiv ist. Hier ein Beispiel dafür: \(f^{-1}(f(3, 5)) = (1, 7)  \text{or} (3,5) \)
+Weil mehrere Kriterien der Funktion gleichzeitig erfüllt sein können, gibt \(f^{-1}(x, y) \) nur ein Tupel zurück, aber in der Implementierung würde darauf geachtet werden.
+
+\subsection*{ Finden des Schwierigsten}
+
+Ich habe dabei ein ähnliches Lösungsverfahren verwendet wie bei der ersten Teilaufgabe mit einem Baum, wobei ich zuerst alle Tubel gebildet habe:
+
+N \dots Number of Items
+
+\begin{equation}
+	\forall n \in \mathbb{N}  \wedge 1 \leq N - n * 2, (n , n , N - n * 2)_n
+\end{equation}
+
+Das sind die Wurzeln des Baumes. Nun nehmen wir uns \(f^{-1}\) (5) zur Hand und berechnen damit alle Äste (Kinder). Wobei Kinder nicht aufgenommen werden, die schon tiefer im Baum existieren. Deswegen gibt es eine Suchfunktion.
+
+Der Baum-Generierungs-Prozess wird abgebrochen, wenn einer der äußeren Äste keine Kinder hat (\(|childs| =. 0 \)) weil alle schon tiefer im Baum vorkommen. Dieser Knoten ist dann der Knoten, der zurückgegeben wird und mit dem aktuell Besten verglichen wird.
+
+\section*{ Implementierung }
+Das Programm wurde mit C++ implementiert. Das hat den Vorteil, dass ich meine Knoten als Objekte und den Parent und die Kinder einfach als Pointer speichern kann. Zudem habe ich den großen Performance-Vorteil, als kompilierte Sprache, den ich definitiv brauche.
+
+\subsection*{ Zum Laufen bringen }
+
+Ich würde sehr dringend raten, den gcc (g++) \(\rightarrow\) die GNU Build Essentials zu nutzen, weil ich nicht dafür garantieren kann, dass es z.B mit VSCODE oder Clang geht. Die Cmake beinhaltet zwei Targets, wobei Telepaartie\_1 die erste Teilaufgabe ist und Telepaartie\_2 die zweite. Ich habe mich für 2 Programme entschieden, um der GNU Philosophie zu folgen.
+
+\begin{lstlisting}[language=Bash]
+	
+	$ mkdir build && cd build
+	
+	$ cmake ..
+	
+	$ make
+	
+	$ ./Telepaartie_1 2 4 7
+	
+	$./Telepaartie_2 63
+
+\end{lstlisting}
+
+\subsection*{ Der Baum }
+
+Die Knoten meines Programmes haben sind in zwei Klassen aufgeteilt. Die Klasse TreeNodeForward für die erste Teilaufgabe und TreeNodeBackwards für die zweite Teilaufgabe. Ich hatte versucht mit einer Interfaceklasse ein wenig Ordnung alles ein wenig zu ordnen hatte aber eher dazu geführt das ich nun mehr Redundaten code habe. Zudem wurde das Auslesen  schlecter Knoten bei der zweiten Teilaufgabe mit der Zeit immer Komplexer weswegen es z.B auch funktionen wie `search` oder `advancedMove` notwenig wurden.
+
+\subsection*{ Beispiel Runs}
+
+In der Ordner resources sind Screenshots von exemplarischen Runs.
+
+\subsection*{ Weitere Optimierungen}
+
+Dadurch das wir wirklich überprüfen was das beste ist mit der Distance Funtkion könnten wir alle in diesem Baum vorkommenden Knoten die unter unserem Input vorkommen aus der Liste der zu überprüfenden rausstreichen. 
+
+\newpage
+
+\begin{itemize}
+	\item \( K  \) \dots Menge aller vorkommen Knoten in einer Überprüfung ( in dem erstelltem Baum)
+	\item \( O \) \dots Menge aller noch zu überprüfenden Werte
+\end{itemize}
+
+\begin{equation}
+	O \setminus K
+\end{equation}
+
+Das hätte den Effekt das die Liste der Elemente wo wir noch die Distance ermitteln müssten sehr schnell kleiner wird.
+
+
+\end{document}
