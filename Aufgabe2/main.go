@@ -12,68 +12,68 @@ import (
 )
 import "math/rand"
 
-func generate_random_number_string(size int) string {
-	var str string = ""
+func generateRandomNumberString(size int) string {
+	var str = ""
 	for i := 0; i < size; i++ {
 		str += strconv.Itoa(rand.Intn(10))
 	}
 	return str
 }
 
-func split_string(str string) *[]string {
-	var size int = int(math.Ceil(float64((len(str) - 1) / 3)))
-	var return_value []string = make([]string, size+1)
+func splitString(str string) *[]string {
+	var size = int(math.Ceil(float64((len(str) - 1) / 3)))
+	var returnValue = make([]string, size+1)
 	for i := 0; i < int(math.Floor(float64(len(str)/3))); i++ {
-		x := string(str[i*3 : (i+1)*3])
-		return_value[i] = x
+		x := str[i*3 : (i+1)*3]
+		returnValue[i] = x
 	}
 	if len(str)%3 != 0 {
-		return_value[size] = str[int(math.Floor(float64(len(str)/3)))*3:]
+		returnValue[size] = str[int(math.Floor(float64(len(str)/3)))*3:]
 	}
-	return &return_value
+	return &returnValue
 }
 
-func transform_blocks(split_string *[]string) *[]string {
-	for index, element := range *split_string {
+func transformBlocks(splitString *[]string) *[]string {
+	for index, element := range *splitString {
 		if element[0:1] == "0" {
-			if index != 0 && len((*split_string)[index-1]) > 2 && (*split_string)[index-1][2:3] != "0" {
-				var x string = (*split_string)[index-1][2:3]
-				(*split_string)[index] = x + (*split_string)[index]
-				(*split_string)[index-1] = (*split_string)[index-1][0:2]
-			} else if index != 0 && len((*split_string)[index-1]) <= 3 && len((*split_string)[index-1]) > 2 && len((*split_string)[index]) > 2 && (*split_string)[index-1][2:3] == "0" {
+			if index != 0 && len((*splitString)[index-1]) > 2 && (*splitString)[index-1][2:3] != "0" {
+				var x = (*splitString)[index-1][2:3]
+				(*splitString)[index] = x + (*splitString)[index]
+				(*splitString)[index-1] = (*splitString)[index-1][0:2]
+			} else if index != 0 && len((*splitString)[index-1]) <= 3 && len((*splitString)[index-1]) > 2 && len((*splitString)[index]) > 2 && (*splitString)[index-1][2:3] == "0" {
 				var x string
-				x = (*split_string)[index][0:1]
-				(*split_string)[index-1] = (*split_string)[index-1] + x
-				(*split_string)[index] = (*split_string)[index][1:]
+				x = (*splitString)[index][0:1]
+				(*splitString)[index-1] = (*splitString)[index-1] + x
+				(*splitString)[index] = (*splitString)[index][1:]
 			}
 		}
 	}
-	return split_string
+	return splitString
 }
 
-func finish_up(split_string *[]string) *[]string{
-	if len((*split_string)[len(*split_string)-1]) < 2 && len((*split_string)[len(*split_string)-2]) < 4{
-		(*split_string)[len(*split_string)-2] += (*split_string)[len(*split_string)-1];
-		(*split_string) = (*split_string)[0:len(*split_string)-1]
-	} else if len((*split_string)[len(*split_string)-2]) > 2 && len((*split_string)[len(*split_string)-1]) < 2{
-		str_length := len((*split_string)[len(*split_string)-2])
-		(*split_string)[len(*split_string)-1] = (*split_string)[len(*split_string)-2][str_length-1:str_length] + (*split_string)[len(*split_string)-1];
-		(*split_string)[len(*split_string)-2] = (*split_string)[len(*split_string)-2][0:str_length-1]
+func finishUp(splitString *[]string) *[]string {
+	if len((*splitString)[len(*splitString)-1]) < 2 && len((*splitString)[len(*splitString)-2]) < 4 {
+		(*splitString)[len(*splitString)-2] += (*splitString)[len(*splitString)-1]
+		*splitString = (*splitString)[0 : len(*splitString)-1]
+	} else if len((*splitString)[len(*splitString)-2]) > 2 && len((*splitString)[len(*splitString)-1]) < 2 {
+		strLength := len((*splitString)[len(*splitString)-2])
+		(*splitString)[len(*splitString)-1] = (*splitString)[len(*splitString)-2][strLength-1:strLength] + (*splitString)[len(*splitString)-1]
+		(*splitString)[len(*splitString)-2] = (*splitString)[len(*splitString)-2][0 : strLength-1]
 	}
-	return split_string;
+	return splitString
 }
 
-func count_zeros(strlist *[]string) int {
-	var return_value int = 0
+func countZeros(strlist *[]string) int {
+	var returnValue = 0
 	for _, element := range *strlist {
 		if element[0:1] == "0" {
-			return_value++
+			returnValue++
 		}
 	}
-	return return_value
+	return returnValue
 }
 
-func request_examples() string {
+func requestExamples() string {
 	url := "https://bwinf.de/fileadmin/user_upload/BwInf/2019/38/1._Runde/Material/A2/nummern.txt"
 	resp, err := http.Get(url)
 	if err != nil {
@@ -88,36 +88,36 @@ func request_examples() string {
 
 func main() {
 	fmt.Println("===== Nummernmerker =====")
-	var split_str []string
+	var splitStr []string
 	reader := bufio.NewReader(os.Stdin)
 	fmt.Print("What kind of test do you want to run (website, random , manual): ")
 	text, _ := reader.ReadString('\n')
 	if text == "website\n" {
 		fmt.Println("Pulling content from the BWINF website ...")
-		split_str = strings.Split(request_examples(), "\n")
-		split_str = split_str[0 : len(split_str)-1]
+		splitStr = strings.Split(requestExamples(), "\n")
+		splitStr = splitStr[0 : len(splitStr)-1]
 
 	} else if text == "random\n" {
 		fmt.Print("Generating number with 1000 digits")
-		split_str = make([]string, 1)
-		split_str[0] = generate_random_number_string(1000)
+		splitStr = make([]string, 1)
+		splitStr[0] = generateRandomNumberString(1000)
 	} else if text == "manual\n" {
 		reader := bufio.NewReader(os.Stdin)
 		fmt.Print("Your Number: ")
 		text, _ := reader.ReadString('\n')
-		split_str = make([]string, 1)
-		split_str[0] = text[0 : len(text)-2]
+		splitStr = make([]string, 1)
+		splitStr[0] = text[0 : len(text)-2]
 	}
 
-	var return_value, split *[]string;
+	var returnValue, split *[]string
 
-	for index, num := range split_str {
+	for index, num := range splitStr {
 		fmt.Println(" *** Number", index, " *** ")
-		split = split_string(num)
-		fmt.Println("String has ", count_zeros(split), " at the beginning of a block")
-		return_value = transform_blocks(split)
-		return_value = finish_up(return_value);
-		fmt.Println("After transformation only ", count_zeros(return_value))
-		fmt.Println(return_value, "\n =======================================================")
+		split = splitString(num)
+		fmt.Println("String has ", countZeros(split), " at the beginning of a block")
+		returnValue = transformBlocks(split)
+		returnValue = finishUp(returnValue)
+		fmt.Println("After transformation only ", countZeros(returnValue))
+		fmt.Println(returnValue, "\n =======================================================")
 	}
 }

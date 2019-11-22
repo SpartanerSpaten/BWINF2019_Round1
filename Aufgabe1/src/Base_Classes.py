@@ -4,32 +4,32 @@ from typing import List, Tuple, Dict
 colorsint2str: Dict[int, str] = {0: "blue", 1: "yellow", 2: "green", 3: "orange", 4: "rosa", 5: "red", 6: "turquoise"}
 colorsstr2int: Dict[str, int] = dict((v, k) for k, v in colorsint2str.items())
 
-color_translate: Dict[str, str] = {"blau": 0, "gelb": 1, "gruen": 2, "orange": 3, "rosa": 4, "rot": 5, "tuerkis": 6}
+color_translate: Dict[str, int] = {"blau": 0, "gelb": 1, "gruen": 2, "orange": 3, "rosa": 4, "rot": 5, "tuerkis": 6}
 
 
-class User_Input:
+class UserInput:
 
     colors_count: int = 0  # Additional Colors
-
     preferences: List[Tuple[int, int, int]] = []
-
     used_colors: List[int] = []  # Every Predefined Used Color
+    open_colors: List[int] = []  # Inverse of used_colors -> not choosen colors
 
-    open_colors: List[int] = []  # Inverse of used_colors -> not chossen colors
+    size: int = 0
+    spare: int = 0
 
-    def makec(self, colors: List[str]):
+    def makec(self, colors: List[str]) -> None:
         for c in colors:
             self.used_colors.append(colorsstr2int[c])
 
         self.gen_open()
 
-    def german_makec(self, colors: List[str]):
+    def german_makec(self, colors: List[str]) -> None:
         for c in colors:
-            self.used_colors.append(color_translate[c])
+            self.used_colors.append(color_translate.get(c))
 
         self.gen_open()
 
-    def gen_open(self):
+    def gen_open(self) -> None:
 
         for x in range(7):
             if x not in self.used_colors:

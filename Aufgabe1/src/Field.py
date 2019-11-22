@@ -1,5 +1,5 @@
 from typing import Tuple, Dict, List
-from Blumenbeet.src.Base_Classes import User_Input
+from Base_Classes import UserInput
 import random
 
 
@@ -26,6 +26,8 @@ class Field:
         (5, 4, 6, 8),
         (6, 7),
     ]
+
+    prepared: Dict[Tuple[int, int], int] = {}
 
     @staticmethod
     def get(pref: Dict[Tuple[int, int], int], search: Tuple[int, int]) -> int:
@@ -79,13 +81,12 @@ class Field:
         self.prepared = return_value
 
 
-def Value(Field):
-    def __init__():
-        pass
-
-
 class HighPriorityPositionALGO:
-    def __init__(self, user_input: User_Input):
+
+    additional_random: List[int] = []
+    final_colors: List[int] = []
+
+    def __init__(self, user_input: UserInput):
 
         self.field = Field()
         self.user_input = user_input

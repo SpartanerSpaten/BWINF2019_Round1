@@ -1,8 +1,8 @@
-from Blumenbeet.User_Interface import UserInterface
-from Blumenbeet.src.Field import HighPriorityPositionALGO
+from User_Interface import UserInterface
+from Field import HighPriorityPositionALGO
 
 if __name__ == "__main__":
-    i = UserInterface()
+    i: UserInterface = UserInterface()
     x = i.request_input()
-    y = HighPriorityPositionALGO(x)
+    y: HighPriorityPositionALGO = HighPriorityPositionALGO(x)
     i.print(y.field)

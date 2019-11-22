@@ -1,21 +1,21 @@
 from typing import List
-from Blumenbeet.src.Base_Classes import colorsint2str, colorsstr2int, User_Input, color_translate
-from Blumenbeet.src.Field import Field
+from Base_Classes import colorsint2str, colorsstr2int, UserInput, color_translate
+from Field import Field
 import urllib.request
 
 
 class UserInterface:
-    def __validate_is_int(self, string: str) -> bool:
-        if string.isdigit() and string.isalnum():
-            return True
-        return False
+    @staticmethod
+    def __validate_is_int(string: str) -> bool:
+        return string.isdigit() and string.isalnum()
 
-    def __validate_colour(self, string: str) -> bool:
+    @staticmethod
+    def __validate_colour(string: str) -> bool:
         return string in colorsint2str.values()
 
     def check_if_right_range(self, integer: str) -> bool:
         if self.__validate_is_int(integer):
-            return int(integer) > 0 and int(integer) <= 3
+            return 0 < int(integer) <= 3
         return False
 
     def __validate_add_color(self, integer: str, size: int) -> bool:
@@ -23,14 +23,14 @@ class UserInterface:
             return (7 - size) >= int(integer)
         return False
 
-    def get_content(self, num):
-        user_input: User_Input = User_Input()
+    @staticmethod
+    def get_content(num: str) -> UserInput:
+        user_input: UserInput = UserInput()
         content: str = urllib.request.urlopen(
             "https://bwinf.de/fileadmin/user_upload/BwInf/2019/38/1._Runde/Material/A1/blumen" + num + ".txt"
         ).read().decode("utf-8").split("\n")[0:-1]
         raw_colors: List[str] = []
         amount_colors: int = int(content[0])
-        amount_wished: int = int(content[1])
 
         for x in content[2:]:
             c1: str = x.split(" ")[0]
@@ -42,16 +42,16 @@ class UserInterface:
                 raw_colors.append(c2)
 
             # Have to use color_translate becouse the BWINF Webpage used german
-            user_input.preferences.append((color_translate[c1], color_translate[c2], int(weight)))
+            user_input.preferences.append((color_translate.get(c1), color_translate.get(c2), int(weight)))
 
         user_input.colors_count = amount_colors - len(raw_colors)
         user_input.german_makec(raw_colors)
 
         return user_input
 
-    def request_input(self) -> User_Input:
+    def request_input(self) -> UserInput:
 
-        user_input: User_Input = User_Input()
+        user_input: UserInput = UserInput()
 
         raw_colors: List[str] = []
 
@@ -65,7 +65,8 @@ class UserInterface:
             return self.get_content(x)
         else:
             print(
-                "Now your color combination preferences just write the two colors you like and add a weight (1-3) that tells how strongly you like this combination"
+                "Now your color combination preferences just write the two colors you like and add a weight (1-3) "
+                "that tells how strongly you like this combination"
             )
 
             print("Just press ENTER and leave the input field empty when you done")
@@ -103,18 +104,20 @@ class UserInterface:
 
                     user_input.preferences.append((colorsstr2int[c1], colorsstr2int[c2], weight))
 
-            print("Do you want additional colors ?")
+            print("How many additional numbers do you want (int) ?")
 
             xinput: str = input(">>>").rstrip()
             while not self.__validate_add_color(xinput, len(raw_colors)):
                 xinput = input(">>>").rstrip()
+                print("Input should be an integer - those colors are chosen randomly")
 
             user_input.colors_count = int(xinput)
             user_input.makec(raw_colors)
 
             return user_input
 
-    def print(self, field: Field) -> None:
+    @staticmethod
+    def print(field: Field) -> None:
 
         print("\n" * 2 + "RESULT:")
 

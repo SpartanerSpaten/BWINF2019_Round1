@@ -13,7 +13,7 @@
 \maketitle
 
 \section{Ideen der Algorithmen}
-Ist eine sammlung an prinziplen Ideen die ich mir gemacht hatte befor ich angefangen hatt zu Implementieren.
+Ist eine Sammlung an prinzipiellen Gedanken, die ich mir gemacht hatte, bevor ich angefangen habe zu implementieren.
 \subsection{Bewertung von Farben}
  
 \(w_i\) \dots  	Wichtung der Preferenz \newline
@@ -24,11 +24,11 @@ Ist eine sammlung an prinziplen Ideen die ich mir gemacht hatte befor ich angefa
 w_f =  \sum \limits_{i=1}^N  (w_i^2 + 1)
 \end{equation}
 
-Diese Gleichung für die Wichtung hatt den Vorteil das durch das Quadrat die Wichtung des Nutzer mehr gewertet wird als wie oft er diese Farbe angab.
+Diese Gleichung für die Wichtung hat den Vorteil, dass durch das Quadrat die Wichtung des Nutzers mehr gewertet wird, als wie oft er diese Farbe angab.
 
 \subsection{Priotiry Places}
 
-Jeder Platz auf dem Blumenbeet hatt eine gewisse anzahl an Nachbar Blumen n. Wobei n genau den Wert dieses Platzen repäsentiert. Dadurch das die anordung auch bis zu einem Gewissen grad Symetrisch ist kann  man nun anfangen die "wichtigen" Farben nun an wichtige Plätze packen. Somit ist mehr oder weniger eine feste reinfolge der Platzierungen gegeben wo zuerst die wichtigsten Farben (mit dem höchsten \(w_f\)) gesetzt werden.
+Jeder Platz auf dem Blumenbeet hat eine gewisse Anzahl an Nachbarblumen n. Wobei n genau den Wert dieses Platzes repäsentiert. Dadurch, dass die Anordung auch bis zu einem gewissen Grad symmetrisch ist, kann  man nun beginnen, die "wichtigen" Farben an wichtige Plätze zu packen. Somit ist mehr oder weniger eine feste Reihenfolge der Platzierungen gegeben, wo zuerst die wichtigsten Farben (mit dem höchsten \(w_f\)) gesetzt werden.
 
 
 \begin{figure}[h]
@@ -40,11 +40,11 @@ Jeder Platz auf dem Blumenbeet hatt eine gewisse anzahl an Nachbar Blumen n. Wob
 
 \newpage
 
-Wobei hier zu beachten ist das 0, 1, 2 Immer mit den höchst gewichtesten Werten Platziert werden. Weil auch wenn alle 7 Farben genutzt werden sollen bleiben die \( 2 = 9 - 7\) für 1 und 2 übrig.
+Wobei hier zu beachten ist , dass 0, 1, 2 immer mit den am höchsten gewichteten Werten platziert werden. Auch wenn alle 7 Farben genutzt werden sollen, bleiben die \( 2 = 9 - 7\) für 1 und 2 übrig.
 
 \section{Implementierung}
 
-Alles wurde einfach aus einfachheits Gründen in Python3.7 Implementiert. Python als highlevel sprache ist einfach Ideal für solche klein Projeckte weil man sich z.B nicht um Memory Leaks, nervende Seq. Faults und ähnliches kümmern muss.
+Alles wurde einfach aus pragmatischen Gründen in Python3.7 implementiert. Python als Highlevel Sprache ist einfach ideal für solche kleine Projekte , weil man sich z.B nicht um Memory Leaks, nervende Seq. Faults und Ähnliches kümmern muss.
 
 \newpage
 
@@ -52,7 +52,7 @@ Alles wurde einfach aus einfachheits Gründen in Python3.7 Implementiert. Python
 
 \subsubsection{ User Input }
 
-Ich habe den Nutzer input etwas anders Designed indem ich zuerst die Prefernzen angeben lasse und danach frage ob er noch andere Farben möchte das macht mehr Sinn aus den einfachen Grund weil man somit Konflike vermeiden kann. Ein Beispiel der Nutzer sagt er möchte 2 Farben haben und sagt dann Rot-Blau-3 und Grün-Blau-2 und er hatt einen konflikt erzeugt weil er 3 Farben in den Prefernzen angiebt. anstelle nur von 2.
+Ich habe den Nutzer-Input etwas anders designed, indem ich zuerst die Preferenzen angeben lasse und danach frage ,ob er noch andere Farben möchte. Das macht mehr Sinn aus dem einfachen Grund, dassl man somit Konflike vermeiden kann. Ein Beispiel - der Nutzer sagt, er möchte 2 Farben haben und sagt dann Rot-Blau-3 und Grün-Blau-2 und er hat einen konflikt erzeugt , weil er 3 Farben in den Preferenzen angibt,s anstelle nur von 2.
 
 
 \subsubsection{Bewertung der Farben}
