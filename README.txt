@@ -6,11 +6,11 @@ Der Sourcecode kann in einem verzeichnes /AufgabeX/src liegen oder es befindet s
 
 Alle Aufgaben wurden unter Linux programmiert (Arch, Ubuntu). Die Programme haben keine weiteren Abhängigkeiten.
 
-Aufgabe1:Blumenbeet:    Python3.7 (3.7 -> supports Typing)
+Aufgabe1:Blumenbeet:    Python>=3.7
 Aufgabe2:Nummernmerker: Go
 Aufgabe3:Telepaartie:   C++
-Aufgabe5:Rominos:       Python -> Tkinter
+Aufgabe5:Rominos:       Python>=3.5 -> Tkinter
 
 Authors:
 - Tassilo Tanneberger
-- Erik Wolf
+- Eric Wolf
