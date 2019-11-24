@@ -109,20 +109,20 @@ Ich würde sehr dringend raten, den gcc (g++) \(\rightarrow\) die GNU Build Esse
 
 \subsection*{ Der Baum }
 
-Die Knoten meines Programmes haben sind in zwei Klassen aufgeteilt. Die Klasse TreeNodeForward für die erste Teilaufgabe und TreeNodeBackwards für die zweite Teilaufgabe. Ich hatte versucht mit einer Interfaceklasse ein wenig Ordnung alles ein wenig zu ordnen hatte aber eher dazu geführt das ich nun mehr Redundaten code habe. Zudem wurde das Auslesen  schlecter Knoten bei der zweiten Teilaufgabe mit der Zeit immer Komplexer weswegen es z.B auch funktionen wie `search` oder `advancedMove` notwenig wurden.
+Die Knoten meines Programmes  sind in zwei Klassen aufgeteilt. Die Klasse TreeNodeForward für die erste Teilaufgabe und TreeNodeBackwards für die zweite Teilaufgabe. Ich hatte versucht, mit einer Interfaceklasse Alles ein wenig zu ordnen, was  aber eher dazu geführt hatte, dass ich nun mehr redundanten Code habe. Zudem wurde das Auslesen schlechter Knoten bei der zweiten Teilaufgabe mit der Zeit immer komplexer, weswegen  z.B auch Funktionen wie `search` oder `advancedMove` notwenig wurden.
 
 \subsection*{ Beispiel Runs}
 
-In der Ordner resources sind Screenshots von exemplarischen Runs.
+In dem Ordner "resources" sind Screenshots von exemplarischen Runs.
 
 \subsection*{ Weitere Optimierungen}
 
-Dadurch das wir wirklich überprüfen was das beste ist mit der Distance Funtkion könnten wir alle in diesem Baum vorkommenden Knoten die unter unserem Input vorkommen aus der Liste der zu überprüfenden rausstreichen. 
+Dadurch, dass  wir  mit der Distance Funktion überprüfen, was das Beste ist, könnten wir alle in diesem Baum vorkommenden Knoten, die unter unserem Input vorkommen, aus der Liste der zu überprüfenden rausstreichen. 
 
 \newpage
 
 \begin{itemize}
-	\item \( K  \) \dots Menge aller vorkommen Knoten in einer Überprüfung ( in dem erstelltem Baum)
+	\item \( K  \) \dots Menge aller vorkommenden Knoten in einer Überprüfung ( in dem erstelltem Baum)
 	\item \( O \) \dots Menge aller noch zu überprüfenden Werte
 \end{itemize}
 
@@ -130,7 +130,7 @@ Dadurch das wir wirklich überprüfen was das beste ist mit der Distance Funtkio
 	O \setminus K
 \end{equation}
 
-Das hätte den Effekt das die Liste der Elemente wo wir noch die Distance ermitteln müssten sehr schnell kleiner wird.
+Das hätte den Effekt, dass die Liste der Elemente, wo wir noch die Distance ermitteln müssten, sehr schnell kleiner wird.
 
 
 \end{document}

@@ -24,7 +24,7 @@ Ist eine Sammlung an prinzipiellen Gedanken, die ich mir gemacht hatte, bevor ic
 w_f =  \sum \limits_{i=1}^N  (w_i^2 + 1)
 \end{equation}
 
-Diese Gleichung für die Wichtung hat den Vorteil, dass durch das Quadrat die Wichtung des Nutzers mehr gewertet wird, als wie oft er diese Farbe angab.
+Diese Gleichung für die Wichtung hat den Vorteil, dass durch das Quadrat, die Wichtung des Nutzers mehr gewertet wird, als wie oft er diese Farbe angab.
 
 \subsection{Priotiry Places}
 
@@ -52,7 +52,7 @@ Alles wurde einfach aus pragmatischen Gründen in Python3.7 implementiert. Pytho
 
 \subsubsection{ User Input }
 
-Ich habe den Nutzer-Input etwas anders designed, indem ich zuerst die Preferenzen angeben lasse und danach frage ,ob er noch andere Farben möchte. Das macht mehr Sinn aus dem einfachen Grund, dassl man somit Konflike vermeiden kann. Ein Beispiel - der Nutzer sagt, er möchte 2 Farben haben und sagt dann Rot-Blau-3 und Grün-Blau-2 und er hat einen konflikt erzeugt , weil er 3 Farben in den Preferenzen angibt,s anstelle nur von 2.
+Ich habe den Nutzer-Input etwas anders designed, indem ich zuerst die Preferenzen angeben lasse und danach frage, ob er noch andere Farben möchte. Das macht mehr Sinn, weil man damit Konflike vermeiden kann. Ein Beispiel - der Nutzer sagt, er möchte 2 Farben haben und sagt dann Rot-Blau-3 und Grün-Blau-2 und er hat einen Konflikt erzeugt , da er 3 Farben in den Preferenzen angibt, an Stelle von vor 2.
 
 
 \subsubsection{Bewertung der Farben}
@@ -74,11 +74,11 @@ In Datei ./Blumengarten/Field.py
 	
 \end{lstlisting}
 
-Wobei preferences eine Liste mit Tupeln der Form (color1, color2, weight) ist.
+Wobei "preferences"  eine Liste mit Tupeln der Form (color1, color2, weight) ist.
 
 \subsubsection{Generieren der anderen Farben}
 
-Diese Methode erzeugt die zusätzlichen Farben zufällig. Zufällig einfach aus dem Grund um noch ein wenig variatät ins Spiel zu bringen.
+Diese Methode erzeugt die zusätzlichen Farben zufällig. Zufällig aus dem Grund, um noch ein wenig Variation ins Spiel zu bringen.
 
 \begin{lstlisting}[language=Python]
 def generate_random_colors(self):
@@ -92,14 +92,13 @@ def generate_random_colors(self):
 \end{lstlisting}
 
 
-\subsubsection{Plazieren}
+\subsubsection{Platzieren}
 
-Als erstes werden die oben angesprochen freien besten Plätze statisch mit den besten Farben besetzt wie in der Reinfolge in Figure 1 beschrieben siehe Funktion placespare(). Wenn dieser Prozess abgeschlossen ist müssen wir alle Übrigen Farben noch unterbringen. Übrige Farben sind nun alle Zufälligen und nicht besten 2. Von diesen Farben wird es jeweils nur 1 geben. \break So nun wir wollen logischerweiße hier auch noch Punkte Sammeln bedeutet wir müssen uns für die Restlichen auch noch schauen wo wir sie am Klügsten hinplatzieren. Dafür gibt es folgene Einfache Schrittfolge:
-
+Zuerst werden die oben angesprochenen freien besten Plätze statisch mit den besten Farben besetzt, wie in der Reihenfolge in Figure1 beschrieben, siehe Funktion placespare(). Wenn dieser Prozess abgeschlossen ist, müssen wir alle übrigen Farben noch unterbringen. Übrige Farben sind nun alle zufälligen und nicht die besten zwei. Von diesen Farben wird es jeweils nur eine geben. \break Da unser Ziel die Maximierung der Anzahl der Punkte ist, müssen die restlichen Blumen so gesetzt werden, dass die Synergien besonders gewichtet werden. Die Platzierung wird nach folgender Schrittfolge getätigt:
 \begin{enumerate}
-\item Indices aller umliegender Plätzeheraus finden
-\item Nach den Farben schaun die auf diesen Plätzen sich befinden
-\item Dann wird die Farbe mit der Höchsten Synergie mit umliegenden Farben ermittelt
+\item Indices aller umliegenden Plätze herausfinden
+\item Nach den Farben schauen, die sich auf diesen Plätzen befinden
+\item Dann wird die Farbe mit der höchsten Synergie mit umliegenden Farben ermittelt
 \item Farbe wird ins Feld geschrieben und aus den verfügbaren Farben heraus gestrichen
 \end{enumerate}
 
@@ -121,7 +120,7 @@ Als erstes werden die oben angesprochen freien besten Plätze statisch mit den b
         return i
 \end{lstlisting}
 
-Er Iteriert einfach durch die Verschiedenen Möglichkeiten machen weil es sehr übersichtlich viele Farben sind. Er Schaut ob die Farbe noch zur verfügung steht also in possiblecolors gelisted ist und nicht usedcolors ist. Dann schaut er sich die umliegenden Farben (color) an und fragt die wichtung zwichen diesen beiden Farben ab wenn es keine gibt ist der Wert einfach 0. Zum Schluss müssen wir dann noch schaun ob es überhaupt Synergien gab gab es keine Wird eine zufällige Farbe gewählt. Sonst der Wert der insgesamt die höchsten Synergien erreichte.
+Das Programm iteriert durch die verschiedenen Möglichkeiten. Weil es sehr übersichtlich viele Farben sind ist das nicht gerade besonders aufwändig. Es schaut, ob die Farbe noch zur Verfügung steht - also in possiblecolors gelisted ist und nicht usedcolors ist. Dann schaut das Programm sich die umliegenden Farben (color) an und fragt die Wichtung zwischen diesen beiden Farben ab. Wenn es keine gibt, ist der Wert einfach 0. Zum Schluss müssen wir dann noch nachsehen, ob es überhaupt Synergien gab. Wenn nicht  wird eine zufällige Farbe gewählt. Sonst der Wert, der insgesamt die höchsten Synergien erreichte.
 
 
 
